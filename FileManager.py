@@ -13,18 +13,14 @@ class FileManager:
     def fileExists(self, song):
         songURL = self.constructURL(song)
         r = requests.head(url=songURL, auth = self.auth, cookies = self.cookies)
-        if r.headers['Content-Type'] == 'audio/mpeg':
-            print "matching" + song.getDetails()
-            return True
-        else:
-            print "Not matching!" + r.headers['content-type']
-            return False
+        return r.headers['Content-Type'] == 'audio/mpeg'
 
 
     def prepare(self, song):
         songURL = self.constructURL(song)
         r = requests.get(url=songURL, auth = self.auth, cookies = self.cookies)
         f = open('/tmp/' + `song.getTrackID()` + '.mp3', 'w')
+        song.setLocalPath('/tmp/' + `song.getTrackID()` + '.mp3')
         f.write(r.content)
 
 

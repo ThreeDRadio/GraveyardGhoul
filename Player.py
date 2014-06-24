@@ -23,6 +23,9 @@ class Player:
         self.player.connect("about-to-finish", self.finished)
 
 
+    def addListener(self, listener):
+        self.listener = listener
+
     def playContent(self, path):
         self.pipeline.set_state(gst.STATE_NULL)
         self.player.set_property("uri", "file://" + path)
@@ -30,4 +33,5 @@ class Player:
         self.pipeline.set_state(gst.STATE_PLAYING)
 
     def finished(self, data):
-        print "finished"
+        self.listener.finished()
+

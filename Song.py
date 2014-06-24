@@ -18,6 +18,12 @@ class Song:
     def getDetails(self):
         return self.getArtistName() + ' - ' + self.getTrackTitle()
 
+    def setLocalPath(self, path):
+        self.path = path
+
+    def getLocalPath(self):
+        return self.path
+
     # IDs
     def getReleaseID(self):
         return self.cdInfo['id']

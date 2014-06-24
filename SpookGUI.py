@@ -3,7 +3,7 @@ pygtk.require('2.0')
 import gtk
 
 
-class SpookGUI(gtk.Window):
+class GUI(gtk.Window):
 
     def delete_event(self, widget, event, data=None):
         return False
@@ -13,8 +13,8 @@ class SpookGUI(gtk.Window):
 
     def __init__(self):        
         gtk.Window.__init__(self)
-        self.set_title("Spook - Haunting the Three D Graveyards");
-        self.show()
+        self.gladefile = "window.glade"
+
 
 
     def main(self):

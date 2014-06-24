@@ -1,12 +1,14 @@
 
+import threading
 
+class Scheduler(threading.Thread):
 
-class Scheduler:
-
-    def __init__(self, musicLibrary, messageLibrary, fileManager):
+    def __init__(self, musicLibrary, messageLibrary, fileManager, playQueue):
+        threading.Thread.__init__(self)
         self.music = musicLibrary
         self.messages = messageLibrary
         self.fileManager = fileManager
+        self.playQueue = playQueue
 
         self.demoQuota = 0
         self.localQuota = 0
@@ -18,6 +20,21 @@ class Scheduler:
 
         self.resetPlayCount()
 
+    def seedQueue(self, count):
+        for i  in range(count):
+            item = self.getNextItem()
+            print "Loading: " + item.getDetails()
+            self.fileManager.prepare(item)
+            self.playQueue.put(item)
+
+
+    def run(self):
+        while True:
+            item = self.getNextItem()
+            print "Loading: " + item.getDetails()
+            self.fileManager.prepare(item)
+            self.playQueue.put(item)
+            print "Queue size: " + `self.playQueue.qsize()`
 
     def resetPlayCount(self):
         self.playCount = 0
@@ -92,5 +109,4 @@ class Scheduler:
 
     def setFemaleQuota(self, quota):
         self.femaleQuota = quota
-
 

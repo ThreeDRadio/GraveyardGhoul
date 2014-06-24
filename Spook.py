@@ -5,12 +5,17 @@ import psycopg2
 from FileManager import FileManager
 from MusicLibrary import MusicLibrary
 from Player import Player 
-from SpookGUI import SpookGUI 
+from PlayThread import PlayThread
+from GhoulGUI import GhoulGUI 
 from Scheduler import Scheduler
 from Song import Song
+from Queue import Queue
+import threading
 
-print "Spook - The Three D Radio Graveyard Manager"
+print "Ghoul - The Three D Radio Graveyard Manager"
 print "Copyright 2014 Michael Marner <michael@20papercups.net>"
+
+gobject.threads_init()
 
 print "Loading config file... "
 configStream = file('config.yaml', 'r')
@@ -37,26 +42,28 @@ library = MusicLibrary(libraryDB)
 library.setAustralianNames(config['music']['aus_names'])
 Song.ausNames = config['music']['aus_names']
 
-scheduler = Scheduler(library, 0, fm)
+playQueue = Queue(5)
+
+scheduler = Scheduler(library, 0, fm, playQueue)
 scheduler.setDemoQuota(config['scheduler']['quotas']['demo'])
 scheduler.setLocalQuota(config['scheduler']['quotas']['local'])
 scheduler.setAusQuota(config['scheduler']['quotas']['aus'])
 scheduler.setFemaleQuota(config['scheduler']['quotas']['female'])
 
+
+print "Seeding the play queue"
+#scheduler.seedQueue(1)
+
+print "Starting the scheduler thread"
+scheduler.start()
 player = Player()
-
-for i in range(1):
-    item = scheduler.getNextItem()
-    print "Loading: " + item.getDetails()
-    fm.prepare(item)
-    print "Playing!"
-    player.playContent(fm.getPath(item))
-
+playThread = PlayThread(player, playQueue)
+playThread.start()
     
 
 scheduler.printStats()
 
-gui = SpookGUI()
+gui = GhoulGUI()
 gui.main()
 
 
