@@ -15,8 +15,8 @@ class Song:
         else:
             return self.trackInfo['trackartist']
 
-    def printDetails(self):
-        print self.getArtistName() + ' - ' + self.getTrackTitle()
+    def getDetails(self):
+        return self.getArtistName() + ' - ' + self.getTrackTitle()
 
     # IDs
     def getReleaseID(self):

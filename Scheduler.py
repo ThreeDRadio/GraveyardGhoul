@@ -29,8 +29,9 @@ class Scheduler:
         self.totalRequests = 0
 
     def getNextItem(self):
-        haveFile = False
-        while not haveFile:
+        i = 0
+        while True: 
+            i+=1
             if self.playCount < 5:
                 nextSong = self.music.getRandomSong(False)
 
@@ -53,7 +54,7 @@ class Scheduler:
 
             self.totalRequests += 1
             if self.fileManager.fileExists(nextSong):
-                haveFile = True
+                break;
         self.addToPlayCount(nextSong)
         return nextSong
 

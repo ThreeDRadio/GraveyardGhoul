@@ -44,8 +44,7 @@ scheduler.setFemaleQuota(config['scheduler']['quotas']['female'])
 
 for i in range(40):
     item = scheduler.getNextItem()
-    item.printDetails()
-    fm.fileExists(item)
+    print "Played: " + item.getDetails()
     
 #    if i % 5 == 0:
 #        scheduler.printStats()

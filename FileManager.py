@@ -12,11 +12,17 @@ class FileManager:
 
     def fileExists(self, song):
         songURL = self.constructURL(song)
-        r = requests.head(url=songURL, self.auth, cookies = self.cookies)
-        return r.headers['Content-Type'] == 'audio/mpeg'
+        r = requests.head(url=songURL, auth = self.auth, cookies = self.cookies)
+        if r.headers['Content-Type'] == 'audio/mpeg':
+            print "matching" + song.getDetails()
+            return True
+        else:
+            print "Not matching!" + r.headers['content-type']
+            return False
 
 
     def getFile(self, song):
+
         return file("/Users/michael/test.mp3")
 
     def constructURL(self, song):
