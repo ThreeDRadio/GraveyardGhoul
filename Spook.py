@@ -1,8 +1,10 @@
 #!./env/bin/python
+import glib, gobject
 import yaml
 import psycopg2
 from FileManager import FileManager
 from MusicLibrary import MusicLibrary
+from Player import Player 
 from SpookGUI import SpookGUI 
 from Scheduler import Scheduler
 from Song import Song
@@ -41,18 +43,21 @@ scheduler.setLocalQuota(config['scheduler']['quotas']['local'])
 scheduler.setAusQuota(config['scheduler']['quotas']['aus'])
 scheduler.setFemaleQuota(config['scheduler']['quotas']['female'])
 
+player = Player()
 
-for i in range(40):
+for i in range(1):
     item = scheduler.getNextItem()
-    print "Played: " + item.getDetails()
+    print "Loading: " + item.getDetails()
+    fm.prepare(item)
+    print "Playing!"
+    player.playContent(fm.getPath(item))
+
     
-#    if i % 5 == 0:
-#        scheduler.printStats()
 
 scheduler.printStats()
 
-#gui = SpookGUI()
-#gui.main()
+gui = SpookGUI()
+gui.main()
 
 
 print "GUI Loaded"
