@@ -21,9 +21,15 @@ class FileManager:
             return False
 
 
-    def getFile(self, song):
+    def prepare(self, song):
+        songURL = self.constructURL(song)
+        r = requests.get(url=songURL, auth = self.auth, cookies = self.cookies)
+        f = open('/tmp/' + `song.getTrackID()` + '.mp3', 'w')
+        f.write(r.content)
 
-        return file("/Users/michael/test.mp3")
+
+    def getPath(self, song):
+        return "/tmp/" + `song.getTrackID()` + ".mp3"
 
     def constructURL(self, song):
         paddedRelease= format (song.getReleaseID(), "07d")
