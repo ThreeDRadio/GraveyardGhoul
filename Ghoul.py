@@ -67,6 +67,7 @@ fm = FileManager(config['file_manager']['user_id'],
 
 library = MusicLibrary(libraryDB)
 library.setAustralianNames(config['music']['aus_names'])
+library.setMaxSongLength(config['music']['max_song_length'])
 Song.ausNames = config['music']['aus_names']
 
 playQueue = Queue(5)
@@ -86,8 +87,8 @@ playThread.start()
 
 scheduler.printStats()
 
-gui = GhoulUI()
-gui.main()
+#gui = GhoulUI()
+#gui.main()
 
 
 print "GUI Loaded"

@@ -45,10 +45,10 @@ class Player:
         self.pipeline = gst.Pipeline("RadioPipe")
         self.player = gst.element_factory_make("playbin2", "player")
         self.fakesink = gst.element_factory_make("fakesink", "fakesink")
-        self.output = gst.element_factory_make("alsasink", "audiosink")
+        self.output = gst.element_factory_make("autoaudiosink", "audiosink")
         #self.output.set_property("device", "preview")
         self.player.set_property("video-sink", self.fakesink)
-        self.player.set_property("audio-sink", self.output)
+        #self.player.set_property("audio-sink", self.output)
         self.pipeline.add(self.player)
         self.player.connect("about-to-finish", self.finished)
 

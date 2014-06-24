@@ -78,7 +78,7 @@ class Scheduler(threading.Thread):
             print "Loading: " + item.getDetails()
             self.fileManager.prepare(item)
             self.playQueue.put(item)
-            print "Queue size: " + `self.playQueue.qsize()`
+            self.printStats()
 
     ##
     # Resets the play count and quota counts.

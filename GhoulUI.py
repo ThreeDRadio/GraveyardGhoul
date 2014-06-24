@@ -1,7 +1,6 @@
 import pygtk
 pygtk.require('2.0')
 import gtk
-import gtk.glade
 
 
 class GhoulUI():
@@ -13,7 +12,9 @@ class GhoulUI():
         gtk.main_quit()
 
     def __init__(self):        
-        pass
+        self.window = gtk.Window()
+        self.window.set_title("Graveyard Ghoul")
+        self.window.show()
 
     def main(self):
         gtk.main();

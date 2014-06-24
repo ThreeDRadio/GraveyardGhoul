@@ -39,6 +39,13 @@ class MusicLibrary:
     def __init__(self, databaseConnection):
         self.db = databaseConnection
 
+
+    ##
+    # Set the maximum song length, in seconds
+    #
+    def setMaxSongLength(self, length):
+        self.maxLength = length
+
     ##
     # Sets the list of names for valid Australian artists.
     #
@@ -60,7 +67,7 @@ class MusicLibrary:
         cur = self.db.cursor(cursor_factory=psycopg2.extras.DictCursor)
         cur.execute("SELECT * FROM cd WHERE demo = '2' ORDER BY RANDOM() LIMIT 1")
         cd = cur.fetchone()
-        cur.execute("SELECT * from cdtrack WHERE cdid = %s ORDER BY RANDOM() LIMIT 1;", (cd['id'],))
+        cur.execute("SELECT * from cdtrack WHERE cdid = %s AND tracklength <= %s ORDER BY RANDOM() LIMIT 1;", (cd['id'], self.maxLength))
         track = cur.fetchone()
         return Song(cd, track)
 
@@ -72,7 +79,7 @@ class MusicLibrary:
         cur = self.db.cursor(cursor_factory=psycopg2.extras.DictCursor)
         cur.execute("SELECT * FROM cd WHERE local = '2' ORDER BY RANDOM() LIMIT 1")
         cd = cur.fetchone()
-        cur.execute("SELECT * from cdtrack WHERE cdid = %s ORDER BY RANDOM() LIMIT 1;", (cd['id'],))
+        cur.execute("SELECT * from cdtrack WHERE cdid = %s AND tracklength <= %s ORDER BY RANDOM() LIMIT 1;", (cd['id'], self.maxLength))
         track = cur.fetchone()
         return Song(cd, track)
 
@@ -83,7 +90,7 @@ class MusicLibrary:
         cur = self.db.cursor(cursor_factory=psycopg2.extras.DictCursor)
         cur.execute("SELECT * FROM cd WHERE cpa = ANY(%s) ORDER BY RANDOM() LIMIT 1", (self.ausNames,))
         cd = cur.fetchone()
-        cur.execute("SELECT * from cdtrack WHERE cdid = %s ORDER BY RANDOM() LIMIT 1;", (cd['id'],))
+        cur.execute("SELECT * from cdtrack WHERE cdid = %s AND tracklength <= %s ORDER BY RANDOM() LIMIT 1;", (cd['id'], self.maxLength))
         track = cur.fetchone()
         return Song(cd, track)
 
@@ -103,7 +110,7 @@ class MusicLibrary:
             cur.execute("SELECT * FROM cd ORDER BY RANDOM() LIMIT 1")
 
         cd = cur.fetchone()
-        cur.execute("SELECT * from cdtrack WHERE cdid = %s ORDER BY RANDOM() LIMIT 1;", (cd['id'],))
+        cur.execute("SELECT * from cdtrack WHERE cdid = %s AND tracklength <= %s ORDER BY RANDOM() LIMIT 1;", (cd['id'], self.maxLength))
         track = cur.fetchone()
         return Song(cd, track)
 

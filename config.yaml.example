@@ -31,10 +31,20 @@ scheduler:
         female: 0.25
         aus: 0.4
 
+file_manager:
+    user_id:  
+    password: 
+    httpUser: 
+    httpPass: 
+
 music:
+    max_song_length: 420
     aus_names: 
         - Australia
         - australia
         - C.P.A.
         - cpa
         - CPA
+        - Aus
+        - Aust
+        - Australian
