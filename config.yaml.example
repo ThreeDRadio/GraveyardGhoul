@@ -1,0 +1,40 @@
+
+music_database:
+    host: localhost
+    user: 
+    password: 
+    database: threed
+
+msg_database:
+    host: localhost
+    user: 
+    password: 
+    database: msglist
+
+messages:
+    sting_categories:
+        - Sub_Message
+        - StationID-Local
+        - StationID-Australian
+        - StationID-International
+        - STING
+        - Sting
+
+scheduler:
+    step_size: 20
+    consecutive_songs:
+        min: 3
+        max: 7
+    quotas:
+        demo: 0.1
+        local: 0.2
+        female: 0.25
+        aus: 0.4
+
+music:
+    aus_names: 
+        - Australia
+        - australia
+        - C.P.A.
+        - cpa
+        - CPA
