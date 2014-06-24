@@ -6,7 +6,7 @@ from FileManager import FileManager
 from MusicLibrary import MusicLibrary
 from Player import Player 
 from PlayThread import PlayThread
-from GhoulGUI import GhoulGUI 
+from GhoulUI import GhoulUI 
 from Scheduler import Scheduler
 from Song import Song
 from Queue import Queue
@@ -63,7 +63,7 @@ playThread.start()
 
 scheduler.printStats()
 
-gui = GhoulGUI()
+gui = GhoulUI()
 gui.main()
 
 
