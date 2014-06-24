@@ -56,3 +56,4 @@ docs/_build/
 # vim stuff
 .*.un~
 *.swp
+config.yaml
