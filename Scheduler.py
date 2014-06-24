@@ -3,9 +3,10 @@
 
 class Scheduler:
 
-    def __init__(self, musicLibrary, messageLibrary):
+    def __init__(self, musicLibrary, messageLibrary, fileManager):
         self.music = musicLibrary
         self.messages = messageLibrary
+        self.fileManager = fileManager
 
         self.demoQuota = 0
         self.localQuota = 0
@@ -25,47 +26,45 @@ class Scheduler:
         self.ausCount = 0
         self.femaleCount = 0
         self.consecutiveSongs = 0
+        self.totalRequests = 0
 
     def getNextItem(self):
-        if self.playCount < 5:
-            nextSong = self.music.getRandomSong(False)
-            self.addToPlayCount(nextSong)
-            return nextSong
-
-        # After 5 totally random tracks, we have enough to start working towards quotas...
-        else:
-            if self.demoCount / float(self.playCount) < self.demoQuota:
-                nextSong = self.music.getRandomDemo()
-                self.addToPlayCount(nextSong)
-                return nextSong
-
-            elif self.localCount / float(self.playCount) < self.localQuota:
-                nextSong = self.music.getRandomLocal()
-                self.addToPlayCount(nextSong)
-                return nextSong
-
-            elif self.ausCount / float(self.playCount) < self.ausQuota:
-                nextSong = self.music.getRandomAustralian()
-                self.addToPlayCount(nextSong)
-                return nextSong
-
-            elif self.femaleCount / float(self.playCount) < self.femaleQuota:
-                nextSong = self.music.getRandomSong(True)
-                self.addToPlayCount(nextSong)
-                return nextSong
-
-            else:
+        haveFile = False
+        while not haveFile:
+            if self.playCount < 5:
                 nextSong = self.music.getRandomSong(False)
-                self.addToPlayCount(nextSong)
-                return nextSong
+
+            # After 5 totally random tracks, we have enough to start working towards quotas...
+            else:
+                if self.demoCount / float(self.playCount) < self.demoQuota:
+                    nextSong = self.music.getRandomDemo()
+
+                elif self.localCount / float(self.playCount) < self.localQuota:
+                    nextSong = self.music.getRandomLocal()
+
+                elif self.ausCount / float(self.playCount) < self.ausQuota:
+                    nextSong = self.music.getRandomAustralian()
+
+                elif self.femaleCount / float(self.playCount) < self.femaleQuota:
+                    nextSong = self.music.getRandomSong(True)
+
+                else:
+                    nextSong = self.music.getRandomSong(False)
+
+            self.totalRequests += 1
+            if self.fileManager.fileExists(nextSong):
+                haveFile = True
+        self.addToPlayCount(nextSong)
+        return nextSong
 
 
     def printStats(self):
-        print "Songs:  " + `self.playCount`
-        print "Demos:  " + `self.demoCount`
-        print "Local:  " + `self.localCount`
-        print "Aus:    " + `self.ausCount`
-        print "Female: " + `self.femaleCount`
+        print "Songs Played:    " + `self.playCount`
+        print "Songs Requested: " + `self.totalRequests`
+        print "Demos:           " + `self.demoCount`
+        print "Local:           " + `self.localCount`
+        print "Aus:             " + `self.ausCount`
+        print "Female:          " + `self.femaleCount`
 
     def addToPlayCount(self, nextSong):
         self.playCount += 1

@@ -26,20 +26,27 @@ messageDB = psycopg2.connect(host = config['msg_database']['host'],
                              password = config['msg_database']['password'],
                              database = config['msg_database']['database'])
 
+fm = FileManager(config['file_manager']['user_id'], 
+                 config['file_manager']['password'],
+                 config['file_manager']['httpUser'],
+                 config['file_manager']['httpPass'])
 
 library = MusicLibrary(libraryDB)
 library.setAustralianNames(config['music']['aus_names'])
 Song.ausNames = config['music']['aus_names']
 
-scheduler = Scheduler(library, 0)
+scheduler = Scheduler(library, 0, fm)
 scheduler.setDemoQuota(config['scheduler']['quotas']['demo'])
 scheduler.setLocalQuota(config['scheduler']['quotas']['local'])
 scheduler.setAusQuota(config['scheduler']['quotas']['aus'])
 scheduler.setFemaleQuota(config['scheduler']['quotas']['female'])
 
+
 for i in range(40):
     item = scheduler.getNextItem()
     item.printDetails()
+    fm.fileExists(item)
+    
 #    if i % 5 == 0:
 #        scheduler.printStats()
 

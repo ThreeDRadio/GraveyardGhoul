@@ -18,6 +18,13 @@ class Song:
     def printDetails(self):
         print self.getArtistName() + ' - ' + self.getTrackTitle()
 
+    # IDs
+    def getReleaseID(self):
+        return self.cdInfo['id']
+
+    def getTrackNumber(self):
+        return self.trackInfo['tracknum']
+
     # Quota Stuff
     def isLocal(self):
         return self.cdInfo['local'] == 2
