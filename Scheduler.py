@@ -1,8 +1,43 @@
+#                                                             
+#          # ###        /                             ###     
+#        /  /###  /   #/                               ###    
+#       /  /  ###/    ##                                ##    
+#      /  ##   ##     ##                                ##    
+#     /  ###          ##                                ##    
+#    ##   ##          ##  /##      /###   ##   ####     ##    
+#    ##   ##   ###    ## / ###    / ###  / ##    ###  / ##    
+#    ##   ##  /###  / ##/   ###  /   ###/  ##     ###/  ##    
+#    ##   ## /  ###/  ##     ## ##    ##   ##      ##   ##    
+#    ##   ##/    ##   ##     ## ##    ##   ##      ##   ##    
+#     ##  ##     #    ##     ## ##    ##   ##      ##   ##    
+#      ## #      /    ##     ## ##    ##   ##      ##   ##    
+#       ###     /     ##     ## ##    ##   ##      /#   ##    
+#        ######/      ##     ##  ######     ######/ ##  ### / 
+#          ###         ##    ##   ####       #####   ##  ##/  
+#                            /                                
+#                           /                                 
+#                          /                                  
+#                         /                                   
+#
+#  Haunting Three D Radio's Graveyard Slots
+#  Copyright 2014 Michael Marner <michael@20papercups.net>
+#  Release under MIT Licence
 
 import threading
 
+
+##
+# Class responsible for scheduling items to play.
+# Can be called manually, or started as a thread.
 class Scheduler(threading.Thread):
 
+    ##
+    # Constructs a new Schedular object.
+    #
+    # @param musicLibrary The MusicLibrary object to query
+    # @param messageLibrary The MessageLibrary object to query
+    # @param fileManager The FileManager object used to resolve Songs to files
+    # @param playQueue The Queue to add scheduled items to
     def __init__(self, musicLibrary, messageLibrary, fileManager, playQueue):
         threading.Thread.__init__(self)
         self.music = musicLibrary
@@ -20,6 +55,12 @@ class Scheduler(threading.Thread):
 
         self.resetPlayCount()
 
+    ##
+    # Adds some songs to the queue.
+    # Can be called before starting the thread, because some FileManager modes
+    # take a while to buffer.
+    #
+    # @param count The number of itmes to add.
     def seedQueue(self, count):
         for i  in range(count):
             item = self.getNextItem()
@@ -28,6 +69,9 @@ class Scheduler(threading.Thread):
             self.playQueue.put(item)
 
 
+    ##
+    # Called by thread.start, loops forever adding items to the play queue
+    #
     def run(self):
         while True:
             item = self.getNextItem()
@@ -36,6 +80,9 @@ class Scheduler(threading.Thread):
             self.playQueue.put(item)
             print "Queue size: " + `self.playQueue.qsize()`
 
+    ##
+    # Resets the play count and quota counts.
+    #
     def resetPlayCount(self):
         self.playCount = 0
         self.demoCount = 0
@@ -45,6 +92,13 @@ class Scheduler(threading.Thread):
         self.consecutiveSongs = 0
         self.totalRequests = 0
 
+    ##
+    # Gets the next item that should be played.
+    #
+    # This method is a little bit clever, it randomly selects items to play
+    # in such a way that the quotas are met.
+    # 
+    # @return The next item to queue
     def getNextItem(self):
         i = 0
         while True: 
@@ -76,6 +130,8 @@ class Scheduler(threading.Thread):
         return nextSong
 
 
+    ##
+    # Prints some quota statistics
     def printStats(self):
         print "Songs Played:    " + `self.playCount`
         print "Songs Requested: " + `self.totalRequests`
@@ -84,6 +140,10 @@ class Scheduler(threading.Thread):
         print "Aus:             " + `self.ausCount`
         print "Female:          " + `self.femaleCount`
 
+    ##
+    # Adds the song to the play count stats
+    # @param nextSong the song to add to the stats.
+    #
     def addToPlayCount(self, nextSong):
         self.playCount += 1
         self.consecutiveSongs+=1
@@ -97,16 +157,23 @@ class Scheduler(threading.Thread):
             self.femaleCount+=1
 
 
-
+    ##
+    # Sets the demo quota to aim for, as a number between 0-1
     def setDemoQuota(self, quota):
         self.demoQuota = quota
 
+    ##
+    # Sets the local quota to aim for, as a number between 0-1
     def setLocalQuota(self, quota):
         self.localQuota = quota
 
+    ##
+    # Sets the Australian quota to aim for, as a number between 0-1
     def setAusQuota(self, quota):
         self.ausQuota = quota
 
+    ##
+    # Sets the Female quota to aim for, as a number between 0-1
     def setFemaleQuota(self, quota):
         self.femaleQuota = quota
 

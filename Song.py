@@ -1,23 +1,61 @@
+#                                                             
+#          # ###        /                             ###     
+#        /  /###  /   #/                               ###    
+#       /  /  ###/    ##                                ##    
+#      /  ##   ##     ##                                ##    
+#     /  ###          ##                                ##    
+#    ##   ##          ##  /##      /###   ##   ####     ##    
+#    ##   ##   ###    ## / ###    / ###  / ##    ###  / ##    
+#    ##   ##  /###  / ##/   ###  /   ###/  ##     ###/  ##    
+#    ##   ## /  ###/  ##     ## ##    ##   ##      ##   ##    
+#    ##   ##/    ##   ##     ## ##    ##   ##      ##   ##    
+#     ##  ##     #    ##     ## ##    ##   ##      ##   ##    
+#      ## #      /    ##     ## ##    ##   ##      ##   ##    
+#       ###     /     ##     ## ##    ##   ##      /#   ##    
+#        ######/      ##     ##  ######     ######/ ##  ### / 
+#          ###         ##    ##   ####       #####   ##  ##/  
+#                            /                                
+#                           /                                 
+#                          /                                  
+#                         /                                   
+#
+#  Haunting Three D Radio's Graveyard Slots
+#  Copyright 2014 Michael Marner <michael@20papercups.net>
+#  Release under MIT Licence
 
 
+##
+# Represents a single song from the music catalogue
+#
 class Song:
+    ##
+    # Constructor, takes the data from the database to encapsulate
+    # @param cdInfo the dictionary of data fro the row in the CD table
+    # @param trackInfo the dictionary of data fro the row in the cdtrack table
     def __init__(self, cdInfo, trackInfo):
         self.cdInfo = cdInfo
         self.trackInfo = trackInfo
 
-    # title stuff
+    ##
+    # Returns the title of the track.
     def getTrackTitle(self):
         return self.trackInfo['tracktitle']
 
+    ##
+    # Returns the name of the artist.
     def getArtistName(self):
         if not self.trackInfo['trackartist']:
             return self.cdInfo['artist']
         else:
             return self.trackInfo['trackartist']
 
+    ##
+    # Returns a friendly string for printing to log files, etc.
     def getDetails(self):
         return self.getArtistName() + ' - ' + self.getTrackTitle()
 
+    ##
+    # Returns this song's info as a CSV line
     def getCSVLine(self):
         return '"' + self.getArtistName() + '",' + \
                '"' + self.getTrackTitle() + '",' + \
@@ -26,23 +64,32 @@ class Song:
                '"' + `self.isAustralian()` + '",' + \
                '"' + `self.hasFemale()`  +'"'
 
+    ##
+    # Store the local path for the file for this song. Used by FileManager.
+    # @param path The path to the file for this song.
     def setLocalPath(self, path):
         self.path = path
 
+    ##
+    # Returns the local path for this file
     def getLocalPath(self):
         return self.path
 
-    # IDs
+    ##
+    # Returns the release ID
     def getReleaseID(self):
         return self.cdInfo['id']
 
+    ##
+    # Returns the track ID used by the database.
     def getTrackID(self):
         return self.trackInfo['trackid']
 
+    ##
+    # Returns the track number from this song's release.
     def getTrackNumber(self):
         return self.trackInfo['tracknum']
 
-    # Quota Stuff
     def isLocal(self):
         return self.cdInfo['local'] == 2
     
