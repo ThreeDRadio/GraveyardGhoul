@@ -50,10 +50,6 @@ scheduler.setLocalQuota(config['scheduler']['quotas']['local'])
 scheduler.setAusQuota(config['scheduler']['quotas']['aus'])
 scheduler.setFemaleQuota(config['scheduler']['quotas']['female'])
 
-
-print "Seeding the play queue"
-#scheduler.seedQueue(1)
-
 print "Starting the scheduler thread"
 scheduler.start()
 player = Player()

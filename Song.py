@@ -18,6 +18,14 @@ class Song:
     def getDetails(self):
         return self.getArtistName() + ' - ' + self.getTrackTitle()
 
+    def getCSVLine(self):
+        return '"' + self.getArtistName() + '",' + \
+               '"' + self.getTrackTitle() + '",' + \
+               '"' + `self.isDemo()` + '",' + \
+               '"' + `self.isLocal()` + '",' + \
+               '"' + `self.isAustralian()` + '",' + \
+               '"' + `self.hasFemale()`  +'"'
+
     def setLocalPath(self, path):
         self.path = path
 

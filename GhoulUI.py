@@ -13,6 +13,7 @@ class GhoulUI():
         gtk.main_quit()
 
     def __init__(self):        
+        pass
 
     def main(self):
         gtk.main();
