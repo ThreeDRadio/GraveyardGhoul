@@ -22,6 +22,9 @@ class Song:
     def getReleaseID(self):
         return self.cdInfo['id']
 
+    def getTrackID(self):
+        return self.trackInfo['trackid']
+
     def getTrackNumber(self):
         return self.trackInfo['tracknum']
 
