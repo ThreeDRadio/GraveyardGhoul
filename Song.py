@@ -23,11 +23,45 @@
 #  Copyright 2014 Michael Marner <michael@20papercups.net>
 #  Release under MIT Licence
 
+class PlayItem:
+    ##
+    # Store the local path for the file for this song. Used by FileManager.
+    # @param path The path to the file for this song.
+    def setLocalPath(self, path):
+        self.path = path
+
+    ##
+    # Returns the local path for this file
+    def getLocalPath(self):
+        return self.path
+
+    ##
+    # Returns a friendly string for printing to log files, etc.
+    def getDetails(self):
+        pass
+
+    ##
+    # Returns this song's info as a CSV line
+    def getCSVLine(self):
+        pass
+
+
+class Message(PlayItem):
+    def __init__(self, category, code, filename):
+        self.category = category
+        self.filename = filename
+        catPath = category.lower()[:12]
+        self.setLocalPath(Message.basePath + catPath + '/' + filename)
+        self.code = code
+
+    def getDetails(self):
+        return self.category + " - " + self.code
+
 
 ##
 # Represents a single song from the music catalogue
 #
-class Song:
+class Song(PlayItem):
     ##
     # Constructor, takes the data from the database to encapsulate
     # @param cdInfo the dictionary of data fro the row in the CD table
@@ -64,16 +98,6 @@ class Song:
                '"' + `self.isAustralian()` + '",' + \
                '"' + `self.hasFemale()`  +'"'
 
-    ##
-    # Store the local path for the file for this song. Used by FileManager.
-    # @param path The path to the file for this song.
-    def setLocalPath(self, path):
-        self.path = path
-
-    ##
-    # Returns the local path for this file
-    def getLocalPath(self):
-        return self.path
 
     ##
     # Returns the release ID

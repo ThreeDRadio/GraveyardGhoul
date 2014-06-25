@@ -31,11 +31,13 @@ import yaml
 import psycopg2
 from FileManager import FileManager
 from MusicLibrary import MusicLibrary
+from MessageLibrary import MessageLibrary
 from Player import Player 
 from PlayThread import PlayThread
 from GhoulUI import GhoulUI 
 from Scheduler import Scheduler
 from Song import Song
+from Song import Message
 from Queue import Queue
 import threading
 
@@ -70,13 +72,19 @@ library.setAustralianNames(config['music']['aus_names'])
 library.setMaxSongLength(config['music']['max_song_length'])
 Song.ausNames = config['music']['aus_names']
 
+messages = MessageLibrary(messageDB)
+messages.setStingCategories(config['messages']['sting_categories'])
+Message.basePath = config['file_manager']['message_base_path']
+
 playQueue = Queue(5)
 
-scheduler = Scheduler(library, 0, fm, playQueue)
+scheduler = Scheduler(library, messages, fm, playQueue)
 scheduler.setDemoQuota(config['scheduler']['quotas']['demo'])
 scheduler.setLocalQuota(config['scheduler']['quotas']['local'])
 scheduler.setAusQuota(config['scheduler']['quotas']['aus'])
 scheduler.setFemaleQuota(config['scheduler']['quotas']['female'])
+scheduler.setConsecutiveSongs(config['scheduler']['consecutive_songs']['min'],
+                              config['scheduler']['consecutive_songs']['max'])
 
 print "Starting the scheduler thread"
 scheduler.start()

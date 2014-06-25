@@ -62,11 +62,12 @@ class FileManager:
     # @param song The Song to prepare.
     #
     def prepare(self, song):
-        songURL = self.constructURL(song)
-        r = requests.get(url=songURL, auth = self.auth, cookies = self.cookies)
-        f = open('/tmp/' + `song.getTrackID()` + '.mp3', 'w')
-        song.setLocalPath('/tmp/' + `song.getTrackID()` + '.mp3')
-        f.write(r.content)
+        if isinstance(song, Song):
+            songURL = self.constructURL(song)
+            r = requests.get(url=songURL, auth = self.auth, cookies = self.cookies)
+            f = open('/tmp/' + `song.getTrackID()` + '.mp3', 'w')
+            song.setLocalPath('/tmp/' + `song.getTrackID()` + '.mp3')
+            f.write(r.content)
 
 
     ##

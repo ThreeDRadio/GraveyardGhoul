@@ -23,47 +23,36 @@
 #  Copyright 2014 Michael Marner <michael@20papercups.net>
 #  Release under MIT Licence
 
+from Song import Message
+import psycopg2
+import psycopg2.extras
 
-
-import threading 
 
 ##
-# This thread class listens to the Player and gives it a constant stream of music to play.
-#
-class PlayThread(threading.Thread):
+# Abstraction around the music library database
+class MessageLibrary:
 
     ##
     # Constructor.
-    # @param player the Player object to give music to
-    # @param playQueue The queue to take music from
+    # 
+    # @param databaseConnection the Psycopg2 object connected to the message database
+    def __init__(self, databaseConnection):
+        self.db = databaseConnection
+
+    ##
+    # Sets the list of categories for stings/stationIDs.
+    # @param names the list of category names for stings
     #
-    def __init__(self, player, playQueue):
-        threading.Thread.__init__(self)
-        self.player = player
-        self.player.addListener(self)
-        self.queue = playQueue
-        self.condition = threading.Condition()
-        
-
-    ##
-    # Called by thread.start, loops forever giving music to the Player
-    def run(self):
-        self.condition.acquire()
-        while True:
-            item = self.queue.get()
-            print "Playing: " + item.getDetails()
-            self.player.playContent(item.getLocalPath())
-            self.nowPlaying = item
-            self.condition.wait()
-        self.condition.release()
-
+    def setStingCategories(self, names):
+        self.stings = names
 
 
     ##
-    # Callback function for the Player, gives it more music.
-    def finished(self):
-        self.condition.acquire()
-        self.condition.notify()
-        self.condition.release()
-
+    # Returns a random sting from the library.
+    #
+    def getRandomSting(self):
+        cur = self.db.cursor(cursor_factory=psycopg2.extras.DictCursor)
+        cur.execute("SELECT * FROM messagelist WHERE type = ANY(%s) ORDER BY RANDOM() LIMIT 1", (self.stings,))
+        details = cur.fetchone()
+        return Message(details['type'], details['code'], details['filename'])
 

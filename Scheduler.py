@@ -24,7 +24,8 @@
 #  Release under MIT Licence
 
 import threading
-
+import Song
+import random
 
 ##
 # Class responsible for scheduling items to play.
@@ -100,34 +101,59 @@ class Scheduler(threading.Thread):
     # 
     # @return The next item to queue
     def getNextItem(self):
-        i = 0
         while True: 
-            i+=1
             if self.playCount < 5:
-                nextSong = self.music.getRandomSong(False)
+                nextItem = self.music.getRandomSong(False)
 
             # After 5 totally random tracks, we have enough to start working towards quotas...
             else:
-                if self.demoCount / float(self.playCount) < self.demoQuota:
-                    nextSong = self.music.getRandomDemo()
+                # absolutely must play a sting...
+                if self.consecutiveSongs > self.maxConsecutive:
+                    nextItem = self.messages.getRandomSting()
+                elif self.consecutiveSongs > self.minConsecutive:
+                    coin = random.randint(0, self.maxConsecutive - self.consecutiveSongs)
+                    if coin == 0:
+                        nextItem = self.messages.getRandomSting()
+                    else:
+                        if self.demoCount / float(self.playCount) < self.demoQuota:
+                            nextItem = self.music.getRandomDemo()
 
-                elif self.localCount / float(self.playCount) < self.localQuota:
-                    nextSong = self.music.getRandomLocal()
+                        elif self.localCount / float(self.playCount) < self.localQuota:
+                            nextItem = self.music.getRandomLocal()
 
-                elif self.ausCount / float(self.playCount) < self.ausQuota:
-                    nextSong = self.music.getRandomAustralian()
+                        elif self.ausCount / float(self.playCount) < self.ausQuota:
+                            nextItem = self.music.getRandomAustralian()
 
-                elif self.femaleCount / float(self.playCount) < self.femaleQuota:
-                    nextSong = self.music.getRandomSong(True)
+                        elif self.femaleCount / float(self.playCount) < self.femaleQuota:
+                            nextItem = self.music.getRandomSong(True)
 
+                        else:
+                            nextItem = self.music.getRandomSong(False)
                 else:
-                    nextSong = self.music.getRandomSong(False)
+                    if self.demoCount / float(self.playCount) < self.demoQuota:
+                        nextItem = self.music.getRandomDemo()
 
-            self.totalRequests += 1
-            if self.fileManager.fileExists(nextSong):
+                    elif self.localCount / float(self.playCount) < self.localQuota:
+                        nextItem = self.music.getRandomLocal()
+
+                    elif self.ausCount / float(self.playCount) < self.ausQuota:
+                        nextItem = self.music.getRandomAustralian()
+
+                    elif self.femaleCount / float(self.playCount) < self.femaleQuota:
+                        nextItem = self.music.getRandomSong(True)
+
+                    else:
+                        nextItem = self.music.getRandomSong(False)
+
+            if isinstance(nextItem, Song.Song):
+                self.totalRequests += 1
+                if self.fileManager.fileExists(nextItem):
+                    self.addToPlayCount(nextItem)
+                    break;
+            else:
+                self.consecutiveSongs = 0
                 break;
-        self.addToPlayCount(nextSong)
-        return nextSong
+        return nextItem
 
 
     ##
@@ -155,6 +181,11 @@ class Scheduler(threading.Thread):
             self.ausCount+=1
         if nextSong.hasFemale():
             self.femaleCount+=1
+
+    
+    def setConsecutiveSongs(self, minSongs, maxSongs):
+        self.minConsecutive = minSongs
+        self.maxConsecutive = maxSongs 
 
 
     ##
