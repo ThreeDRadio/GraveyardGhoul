@@ -115,6 +115,8 @@ class Song(PlayItem):
     ##
     # Returns the track number from this song's release.
     def getTrackNumber(self):
+        if self.trackInfo == None:
+            return 0
         return self.trackInfo['tracknum']
 
     def isLocal(self):
