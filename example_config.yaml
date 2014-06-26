@@ -67,7 +67,10 @@ file_manager:
 
     ##
     # The path to find the message files
-    message_base_path: /path/to/messages/
+    message_base_path: /data/msg/
+
+    music_base_path: /data/mus/hi/
+
 
 ##
 # Configuration of the music library
