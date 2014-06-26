@@ -102,15 +102,15 @@ class Scheduler(threading.Thread):
     # @return The next item to queue
     def getNextItem(self):
         while True: 
-            if self.playCount < 1:
+            if self.playCount < 5:
                 nextItem = self.music.getRandomSong(False)
 
             # After 5 totally random tracks, we have enough to start working towards quotas...
             else:
                 # absolutely must play a sting...
-                if self.consecutiveSongs > self.maxConsecutive:
+                if self.consecutiveSongs >= self.maxConsecutive:
                     nextItem = self.messages.getRandomSting()
-                elif self.consecutiveSongs > self.minConsecutive:
+                elif self.consecutiveSongs >= self.minConsecutive:
                     coin = random.randint(0, self.maxConsecutive - self.consecutiveSongs)
                     if coin == 0:
                         nextItem = self.messages.getRandomSting()
