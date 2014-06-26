@@ -42,15 +42,11 @@ class Player:
     # Constructor, builds a gstreamer player ready to play music
     #
     def __init__(self):
-        self.pipeline = gst.Pipeline("RadioPipe")
         self.player = gst.element_factory_make("playbin2", "player")
-        self.fakesink = gst.element_factory_make("fakesink", "fakesink")
-        self.output = gst.element_factory_make("autoaudiosink", "audiosink")
-        #self.output.set_property("device", "preview")
-        self.player.set_property("video-sink", self.fakesink)
-        #self.player.set_property("audio-sink", self.output)
-        self.pipeline.add(self.player)
-        self.player.connect("about-to-finish", self.finished)
+        #self.player.connect("about-to-finish", self.finished)
+        self.bus = self.player.get_bus()
+        self.bus.connect('message', self.onMessage)
+        self.bus.add_signal_watch()
 
 
     ##
@@ -65,10 +61,16 @@ class Player:
     # @param path The full path to the content to play (file, url, etc.)
     #
     def playContent(self, path):
-        self.pipeline.set_state(gst.STATE_NULL)
+        self.player.set_state(gst.STATE_NULL)
         self.player.set_property("uri", "file://" + urllib.pathname2url(path))
-        print urllib.pathname2url(path)
-        self.pipeline.set_state(gst.STATE_PLAYING)
+        self.player.set_state(gst.STATE_PLAYING)
+
+    def onMessage(self, bus, message):
+        t = message.type
+        if t == gst.MESSAGE_EOS:
+            self.listener.finished()
+        if t == gst.MESSAGE_ERROR:
+            self.listener.finished()
 
     ##
     # Private callback function, you shouldn't touch this.

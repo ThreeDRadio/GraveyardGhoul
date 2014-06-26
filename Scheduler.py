@@ -24,7 +24,8 @@
 #  Release under MIT Licence
 
 import threading
-import Song
+from PlayItem import Song
+from PlayItem import Message
 import random
 
 ##
@@ -79,7 +80,6 @@ class Scheduler(threading.Thread):
             print "Loading: " + item.getDetails()
             self.fileManager.prepare(item)
             self.playQueue.put(item)
-            self.printStats()
 
     ##
     # Resets the play count and quota counts.
@@ -145,7 +145,7 @@ class Scheduler(threading.Thread):
                     else:
                         nextItem = self.music.getRandomSong(False)
 
-            if isinstance(nextItem, Song.Song):
+            if isinstance(nextItem, Song):
                 self.totalRequests += 1
                 if self.fileManager.fileExists(nextItem):
                     self.addToPlayCount(nextItem)
