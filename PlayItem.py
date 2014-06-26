@@ -23,6 +23,8 @@
 #  Copyright 2014 Michael Marner <michael@20papercups.net>
 #  Release under MIT Licence
 
+import urllib
+
 class PlayItem:
     ##
     # Store the local path for the file for this song. Used by FileManager.
@@ -51,6 +53,7 @@ class Message(PlayItem):
         self.category = category
         self.filename = filename
         catPath = category.lower()[:12]
+        #self.setLocalPath(urllib.quote(Message.basePath + catPath + '/' + filename ))
         self.setLocalPath(Message.basePath + catPath + '/' + filename)
         self.code = code
 

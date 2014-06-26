@@ -23,7 +23,7 @@
 #  Copyright 2014 Michael Marner <michael@20papercups.net>
 #  Release under MIT Licence
 
-from Song import Message
+from PlayItem import Message
 import psycopg2
 import psycopg2.extras
 

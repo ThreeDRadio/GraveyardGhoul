@@ -30,7 +30,7 @@ import pygst
 pygst.require("0.10")
 import gst
 import os
-
+import urllib
 
 
 ##
@@ -66,8 +66,8 @@ class Player:
     #
     def playContent(self, path):
         self.pipeline.set_state(gst.STATE_NULL)
-        self.player.set_property("uri", "file://" + path)
-        #self.player.set_property('uri', 'file://' + os.path.abspath('test.mp3'))
+        self.player.set_property("uri", "file://" + urllib.pathname2url(path))
+        print urllib.pathname2url(path)
         self.pipeline.set_state(gst.STATE_PLAYING)
 
     ##

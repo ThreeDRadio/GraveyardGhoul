@@ -102,7 +102,7 @@ class Scheduler(threading.Thread):
     # @return The next item to queue
     def getNextItem(self):
         while True: 
-            if self.playCount < 5:
+            if self.playCount < 1:
                 nextItem = self.music.getRandomSong(False)
 
             # After 5 totally random tracks, we have enough to start working towards quotas...

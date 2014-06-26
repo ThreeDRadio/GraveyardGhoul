@@ -36,8 +36,8 @@ from Player import Player
 from PlayThread import PlayThread
 from GhoulUI import GhoulUI 
 from Scheduler import Scheduler
-from Song import Song
-from Song import Message
+from PlayItem import Song
+from PlayItem import Message
 from Queue import Queue
 import threading
 

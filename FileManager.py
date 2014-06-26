@@ -25,7 +25,7 @@
 
 
 import requests
-from Song import Song
+from PlayItem import Song
 
 
 ##
