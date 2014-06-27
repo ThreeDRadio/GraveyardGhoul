@@ -141,7 +141,7 @@ class Song(PlayItem):
         return self.cdInfo['local'] == 2
     
     def isAustralian(self):
-        return self.cdInfo['cpa'] in Song.ausNames
+        return self.isLocal() or self.cdInfo['cpa'] in Song.ausNames
 
     def isDemo(self):
         return self.cdInfo['demo'] == 2
