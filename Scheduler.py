@@ -58,19 +58,7 @@ class Scheduler(threading.Thread):
 
         self.resetPlayCount()
 
-    ##
-    # Adds some songs to the queue.
-    # Can be called before starting the thread, because some FileManager modes
-    # take a while to buffer.
-    #
-    # @param count The number of itmes to add.
-    def seedQueue(self, count):
-        for i  in range(count):
-            item = self.getNextItem()
-            print "Loading: " + item.getDetails()
-            self.fileManager.prepare(item)
-            self.playQueue.put(item)
-
+        self.listeners = list()
 
     ##
     # Called by thread.start, loops forever adding items to the play queue
@@ -81,6 +69,8 @@ class Scheduler(threading.Thread):
             print "Loading: " + item.getDetails()
             self.fileManager.prepare(item)
             self.playQueue.put(item)
+            for l in self.listeners:
+                l.itemQueued(item)
 
     ##
     # Resets the play count and quota counts.
@@ -208,4 +198,7 @@ class Scheduler(threading.Thread):
     # Sets the Female quota to aim for, as a number between 0-1
     def setFemaleQuota(self, quota):
         self.femaleQuota = quota
+
+    def addListener(self, listener):
+        self.listeners.append(listener)
 

@@ -47,18 +47,29 @@ class PlayItem:
     def getCSVLine(self):
         pass
 
+    def getDuration(self):
+        return self.duration
+
 
 class Message(PlayItem):
-    def __init__(self, category, code, filename):
+    def __init__(self, category, code, title, filename, duration):
         self.category = category
         self.filename = filename
+        self.duration = duration
+        self.title = title  
         catPath = category.lower()[:12]
         #self.setLocalPath(urllib.quote(Message.basePath + catPath + '/' + filename ))
         self.setLocalPath(Message.basePath + catPath + '/' + filename)
         self.code = code
 
+    def getCategory(self):
+        return self.category
+
+    def getTitle(self):
+        return self.title
+
     def getDetails(self):
-        return self.category + " - " + self.code
+        return self.category + " - " + self.title
 
 
 ##
@@ -72,6 +83,8 @@ class Song(PlayItem):
     def __init__(self, cdInfo, trackInfo):
         self.cdInfo = cdInfo
         self.trackInfo = trackInfo
+        if trackInfo != None:
+            self.duration = trackInfo['tracklength']
 
     ##
     # Returns the title of the track.

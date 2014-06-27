@@ -72,6 +72,14 @@ class Player:
         self.player.set_state(gst.STATE_PAUSED)
         self.paused = True
 
+    def getElapsedTime(self):
+        time_format = gst.Format(gst.FORMAT_TIME)
+        try:
+            elapsedTime = self.player.query_position(time_format, None)[0]
+            return elapsedTime / 1000000000
+        except gst.QueryError:
+            return 0
+
 
     def togglePause(self):
         if self.paused:
@@ -111,6 +119,7 @@ class PlayThread(threading.Thread):
         self.player.addListener(self)
         self.queue = playQueue
         self.condition = threading.Condition()
+        self.listeners = list()
         
     ##
     # Called by thread.start, loops forever giving music to the Player
@@ -122,6 +131,8 @@ class PlayThread(threading.Thread):
             print "Playing: " + item.getDetails()
             self.player.playContent(item.getLocalPath())
             self.nowPlaying = item
+            for l in self.listeners:
+                l.itemPlaying(item)
             self.condition.wait()
         self.condition.release()
 
@@ -132,8 +143,12 @@ class PlayThread(threading.Thread):
         self.condition.notify()
         self.condition.release()
 
+
     def stop(self):
         this.keepGoing = False
         self.condition.acquire()
         self.condition.notify()
         self.condition.release()
+
+    def addListener(self, listener):
+        self.listeners.append(listener)

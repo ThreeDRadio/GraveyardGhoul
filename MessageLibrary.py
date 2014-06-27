@@ -54,5 +54,5 @@ class MessageLibrary:
         cur = self.db.cursor(cursor_factory=psycopg2.extras.DictCursor)
         cur.execute("SELECT * FROM messagelist WHERE type = ANY(%s) ORDER BY RANDOM() LIMIT 1", (self.stings,))
         details = cur.fetchone()
-        return Message(details['type'], details['code'], details['filename'])
+        return Message(details['type'], details['code'], details['title'], details['filename'], details['duration'])
 

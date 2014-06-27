@@ -83,10 +83,19 @@ class Ghoul:
         self.scheduler.setConsecutiveSongs(config['scheduler']['consecutive_songs']['min'],
                                       config['scheduler']['consecutive_songs']['max'])
 
+        self.scheduler.addListener(self)
+
         self.player = Player.Player()
         self.playThread = Player.PlayThread(self.player, self.playQueue)
+        self.playThread.addListener(self)
 
         self.paused = False
+
+        self.listeners = list()
+
+    def addListener(self, listener):
+        self.listeners.append(listener)
+
 
     def play(self):
         if self.paused:
@@ -100,9 +109,23 @@ class Ghoul:
         self.paused = True
         self.player.togglePause()
 
+    def getElapsedTime(self):
+        return self.player.getElapsedTime()
+
+    def getQueuedItems(self):
+        items = list()
+        for elem in list(self.playQueue.queue):
+            items.append(elem)
+        return items
 
 
+    def itemPlaying(self, item):
+        for l in self.listeners:
+            l.itemPlaying(item)
 
+    def itemQueued(self, item):
+        for l in self.listeners:
+            l.itemQueued(item)
 
 print "Ghoul - The Three D Radio Graveyard Manager"
 print "Copyright 2014 Michael Marner <michael@20papercups.net>"
