@@ -34,11 +34,16 @@ class GhoulUI:
         gLoop.start()
 
     def onPlay(self, widget):
+        self.glade.get_object("PlayButton").set_sensitive(False)
+        self.glade.get_object("PauseButton").set_sensitive(True)
+        self.glade.get_object("StopButton").set_sensitive(True)
         self.controller.play()
-        print "Play Pressed"
 
     def onPause(self, widget):
-        print "Pause Pressed"
+        self.controller.pause()
+        self.glade.get_object("PlayButton").set_sensitive(True)
+        self.glade.get_object("PauseButton").set_sensitive(False)
+        self.glade.get_object("StopButton").set_sensitive(True)
 
     def onStop(self, widget):
         print "Stop Pressed"

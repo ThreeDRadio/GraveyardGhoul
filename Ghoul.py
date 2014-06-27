@@ -86,9 +86,20 @@ class Ghoul:
         self.player = Player.Player()
         self.playThread = Player.PlayThread(self.player, self.playQueue)
 
+        self.paused = False
+
     def play(self):
-        self.scheduler.start()
-        self.playThread.start()
+        if self.paused:
+            self.paused = False
+            self.player.togglePause()
+        else:
+            self.scheduler.start()
+            self.playThread.start()
+
+    def pause(self):
+        self.paused = True
+        self.player.togglePause()
+
 
 
 

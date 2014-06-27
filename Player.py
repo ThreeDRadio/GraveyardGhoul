@@ -48,6 +48,7 @@ class Player:
         self.bus = self.player.get_bus()
         self.bus.connect('message', self.onMessage)
         self.bus.add_signal_watch()
+        self.paused = False
 
 
     ##
@@ -65,6 +66,14 @@ class Player:
         self.player.set_state(gst.STATE_NULL)
         self.player.set_property("uri", "file://" + urllib.pathname2url(path))
         self.player.set_state(gst.STATE_PLAYING)
+
+    def togglePause(self):
+        if self.paused:
+            self.paused = False
+            self.player.set_state(gst.STATE_PLAYING)
+        else:
+            self.paused = True 
+            self.player.set_state(gst.STATE_PAUSED)
 
     def onMessage(self, bus, message):
         t = message.type
