@@ -16,10 +16,28 @@ class GhoulUI:
         self.gladeFile = "MainGUI.glade"
         self.glade = gtk.Builder()
         self.glade.add_from_file(self.gladeFile)
-        self.glade.connect_signals(self)
+
+        dic = { "onPause" : self.onPause,
+                "onPlay" :  self.onPlay,
+                "onStop" :  self.onStop,
+                "onWindowClose" : self.onClose
+                }
+
+        self.glade.connect_signals(dic)
+
         self.glade.get_object("MainWindow").show_all()
 
     def main(self):
         gtk.main();
 
+    def onPlay(self, widget):
+        print "Play Pressed"
 
+    def onPause(self, widget):
+        print "Pause Pressed"
+
+    def onStop(self, widget):
+        print "Stop Pressed"
+
+    def onClose(self, widget):
+        gtk.main_quit()
