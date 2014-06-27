@@ -42,9 +42,9 @@ class GhoulUI:
             if self.nowPlaying != None:
                 duration = self.nowPlaying.getDuration()
                 currentTime = self.controller.getElapsedTime()
-                self.glade.get_object("SongProgress").set_fraction( float(currentTime) / duration)
-                elapsedMinutes = currentTime / 60
-                elapsedSeconds = currentTime % 60
+                self.glade.get_object("SongProgress").set_fraction( float(currentTime) / (duration * 1000))
+                elapsedMinutes = (currentTime / 1000) / 60
+                elapsedSeconds = (currentTime / 1000) % 60
                 totalMinutes = duration / 60
                 totalSeconds = duration % 60
                 self.glade.get_object("SongProgress").set_text("%01d:%02d / %01d:%02d" %(elapsedMinutes, elapsedSeconds, totalMinutes, totalSeconds))

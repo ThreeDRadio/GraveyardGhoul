@@ -55,7 +55,10 @@ class Message(PlayItem):
     def __init__(self, category, code, title, filename, duration):
         self.category = category
         self.filename = filename
-        self.duration = duration
+        if duration == None:
+            self.duration = 0
+        else:
+            self.duration = duration
         self.title = title  
         catPath = category.lower()[:12]
         #self.setLocalPath(urllib.quote(Message.basePath + catPath + '/' + filename ))
@@ -85,6 +88,8 @@ class Song(PlayItem):
         self.trackInfo = trackInfo
         if trackInfo != None:
             self.duration = trackInfo['tracklength']
+        else
+            self.duration = 0
 
     ##
     # Returns the title of the track.

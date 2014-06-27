@@ -76,7 +76,7 @@ class Player:
         time_format = gst.Format(gst.FORMAT_TIME)
         try:
             elapsedTime = self.player.query_position(time_format, None)[0]
-            return elapsedTime / 1000000000
+            return elapsedTime / 1000000
         except gst.QueryError:
             return 0
 
