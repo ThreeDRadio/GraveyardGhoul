@@ -2,6 +2,7 @@ import pygtk
 pygtk.require('2.0')
 import gtk
 import gtk.glade
+import threading
 
 
 class GhoulUI:
@@ -12,7 +13,7 @@ class GhoulUI:
     def destroy(self, widget, data=None):
         gtk.main_quit()
 
-    def __init__(self):        
+    def __init__(self, controller):        
         self.gladeFile = "MainGUI.glade"
         self.glade = gtk.Builder()
         self.glade.add_from_file(self.gladeFile)
@@ -23,14 +24,17 @@ class GhoulUI:
                 "onWindowClose" : self.onClose
                 }
 
+        self.controller = controller
         self.glade.connect_signals(dic)
 
         self.glade.get_object("MainWindow").show_all()
 
     def main(self):
-        gtk.main();
+        gLoop = threading.Thread(target=gtk.main);
+        gLoop.start()
 
     def onPlay(self, widget):
+        self.controller.play()
         print "Play Pressed"
 
     def onPause(self, widget):

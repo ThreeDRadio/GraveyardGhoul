@@ -42,6 +42,7 @@ class Scheduler(threading.Thread):
     # @param playQueue The Queue to add scheduled items to
     def __init__(self, musicLibrary, messageLibrary, fileManager, playQueue):
         threading.Thread.__init__(self)
+        self.daemon = True
         self.music = musicLibrary
         self.messages = messageLibrary
         self.fileManager = fileManager

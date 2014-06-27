@@ -29,77 +29,77 @@
 import glib, gobject
 import yaml
 import psycopg2
+import threading
+
 from FileManager import FileManager
+
 from MusicLibrary import MusicLibrary
 from MessageLibrary import MessageLibrary
-from Player import Player 
-from PlayThread import PlayThread
-from GhoulUI import GhoulUI 
+import Player
+import PlayItem
+
+import GhoulUI 
 from Scheduler import Scheduler
-from PlayItem import Song
-from PlayItem import Message
 from Queue import Queue
-import threading
+
+
+class Ghoul:
+    def __init__(self):
+        configStream = file('config.yaml', 'r')
+        config = yaml.load(configStream)
+
+        self.libraryDB = psycopg2.connect(host = config['music_database']['host'],
+                                     user = config['music_database']['user'],
+                                     password = config['music_database']['password'],
+                                     database = config['music_database']['database'])
+        
+        self.messageDB = psycopg2.connect(host = config['msg_database']['host'],
+                                     user = config['msg_database']['user'],
+                                     password = config['msg_database']['password'],
+                                     database = config['msg_database']['database'])
+        
+        
+        self.fm = FileManager(config['file_manager']['user_id'], 
+                         config['file_manager']['password'],
+                         config['file_manager']['httpUser'],
+                         config['file_manager']['httpPass'])
+
+        self.library = MusicLibrary(self.libraryDB)
+        self.library.setAustralianNames(config['music']['aus_names'])
+        self.library.setMaxSongLength(config['music']['max_song_length'])
+        PlayItem.Song.ausNames = config['music']['aus_names']
+        
+        self.messages = MessageLibrary(self.messageDB)
+        self.messages.setStingCategories(config['messages']['sting_categories'])
+        PlayItem.Message.basePath = config['file_manager']['message_base_path']
+        
+        self.playQueue = Queue(5)
+       
+        self.scheduler = Scheduler(self.library, self.messages, self.fm, self.playQueue)
+        self.scheduler.setDemoQuota(config['scheduler']['quotas']['demo'])
+        self.scheduler.setLocalQuota(config['scheduler']['quotas']['local'])
+        self.scheduler.setAusQuota(config['scheduler']['quotas']['aus'])
+        self.scheduler.setFemaleQuota(config['scheduler']['quotas']['female'])
+        self.scheduler.setConsecutiveSongs(config['scheduler']['consecutive_songs']['min'],
+                                      config['scheduler']['consecutive_songs']['max'])
+
+        self.player = Player.Player()
+        self.playThread = Player.PlayThread(self.player, self.playQueue)
+
+    def play(self):
+        self.scheduler.start()
+        self.playThread.start()
+
+
+
 
 print "Ghoul - The Three D Radio Graveyard Manager"
 print "Copyright 2014 Michael Marner <michael@20papercups.net>"
-
 gobject.threads_init()
 
-print "Loading config file... "
-configStream = file('config.yaml', 'r')
-config = yaml.load(configStream)
-yaml.dump(config)
-
-print "Connecting to database"
-libraryDB = psycopg2.connect(host = config['music_database']['host'],
-                             user = config['music_database']['user'],
-                             password = config['music_database']['password'],
-                             database = config['music_database']['database'])
-
-messageDB = psycopg2.connect(host = config['msg_database']['host'],
-                             user = config['msg_database']['user'],
-                             password = config['msg_database']['password'],
-                             database = config['msg_database']['database'])
-
-fm = FileManager(config['file_manager']['user_id'], 
-                 config['file_manager']['password'],
-                 config['file_manager']['httpUser'],
-                 config['file_manager']['httpPass'])
-
-library = MusicLibrary(libraryDB)
-library.setAustralianNames(config['music']['aus_names'])
-library.setMaxSongLength(config['music']['max_song_length'])
-Song.ausNames = config['music']['aus_names']
-
-messages = MessageLibrary(messageDB)
-messages.setStingCategories(config['messages']['sting_categories'])
-Message.basePath = config['file_manager']['message_base_path']
-
-playQueue = Queue(5)
-
-scheduler = Scheduler(library, messages, fm, playQueue)
-scheduler.setDemoQuota(config['scheduler']['quotas']['demo'])
-scheduler.setLocalQuota(config['scheduler']['quotas']['local'])
-scheduler.setAusQuota(config['scheduler']['quotas']['aus'])
-scheduler.setFemaleQuota(config['scheduler']['quotas']['female'])
-scheduler.setConsecutiveSongs(config['scheduler']['consecutive_songs']['min'],
-                              config['scheduler']['consecutive_songs']['max'])
-
-print "Starting the scheduler thread"
-scheduler.start()
-player = Player()
-playThread = PlayThread(player, playQueue)
-playThread.start()
-    
-
-scheduler.printStats()
-
-gLoop = threading.Thread(target=gobject.MainLoop().run)
-gLoop.daemon = True
-gLoop.start()
-gui = GhoulUI()
-
+ghoul = Ghoul()
+gui = GhoulUI.GhoulUI(ghoul)
+gui.main()
 
 print "GUI Loaded"
 

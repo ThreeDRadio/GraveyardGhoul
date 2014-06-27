@@ -91,6 +91,7 @@ class PlayThread(threading.Thread):
     #
     def __init__(self, player, playQueue):
         threading.Thread.__init__(self)
+        self.daemon = True
         self.player = player
         self.player.addListener(self)
         self.queue = playQueue
