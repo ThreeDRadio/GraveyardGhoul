@@ -20,7 +20,6 @@ class GhoulUI:
 
         dic = { "onPause" : self.onPause,
                 "onPlay" :  self.onPlay,
-                "onStop" :  self.onStop,
                 "onWindowClose" : self.onClose
                 }
 
@@ -36,17 +35,13 @@ class GhoulUI:
     def onPlay(self, widget):
         self.glade.get_object("PlayButton").set_sensitive(False)
         self.glade.get_object("PauseButton").set_sensitive(True)
-        self.glade.get_object("StopButton").set_sensitive(True)
         self.controller.play()
 
     def onPause(self, widget):
         self.controller.pause()
         self.glade.get_object("PlayButton").set_sensitive(True)
         self.glade.get_object("PauseButton").set_sensitive(False)
-        self.glade.get_object("StopButton").set_sensitive(True)
 
-    def onStop(self, widget):
-        print "Stop Pressed"
 
     def onClose(self, widget):
         gtk.main_quit()

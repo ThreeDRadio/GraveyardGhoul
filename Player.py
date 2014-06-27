@@ -66,6 +66,12 @@ class Player:
         self.player.set_state(gst.STATE_NULL)
         self.player.set_property("uri", "file://" + urllib.pathname2url(path))
         self.player.set_state(gst.STATE_PLAYING)
+        self.paused = False
+
+    def stop(self):
+        self.player.set_state(gst.STATE_PAUSED)
+        self.paused = True
+
 
     def togglePause(self):
         if self.paused:
@@ -106,12 +112,12 @@ class PlayThread(threading.Thread):
         self.queue = playQueue
         self.condition = threading.Condition()
         
-
     ##
     # Called by thread.start, loops forever giving music to the Player
     def run(self):
+        self.keepGoing = True
         self.condition.acquire()
-        while True:
+        while self.keepGoing:
             item = self.queue.get()
             print "Playing: " + item.getDetails()
             self.player.playContent(item.getLocalPath())
@@ -119,11 +125,15 @@ class PlayThread(threading.Thread):
             self.condition.wait()
         self.condition.release()
 
-
-
     ##
     # Callback function for the Player, gives it more music.
     def finished(self):
+        self.condition.acquire()
+        self.condition.notify()
+        self.condition.release()
+
+    def stop(self):
+        this.keepGoing = False
         self.condition.acquire()
         self.condition.notify()
         self.condition.release()
