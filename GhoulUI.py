@@ -1,9 +1,10 @@
 import pygtk
 pygtk.require('2.0')
 import gtk
+import gtk.glade
 
 
-class GhoulUI():
+class GhoulUI:
 
     def delete_event(self, widget, event, data=None):
         return False
@@ -12,9 +13,11 @@ class GhoulUI():
         gtk.main_quit()
 
     def __init__(self):        
-        self.window = gtk.Window()
-        self.window.set_title("Graveyard Ghoul")
-        self.window.show()
+        self.gladeFile = "MainGUI.glade"
+        self.glade = gtk.Builder()
+        self.glade.add_from_file(self.gladeFile)
+        self.glade.connect_signals(self)
+        self.glade.get_object("MainWindow").show_all()
 
     def main(self):
         gtk.main();

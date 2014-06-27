@@ -98,8 +98,7 @@ scheduler.printStats()
 gLoop = threading.Thread(target=gobject.MainLoop().run)
 gLoop.daemon = True
 gLoop.start()
-#gui = GhoulUI()
-#gui.main()
+gui = GhoulUI()
 
 
 print "GUI Loaded"
