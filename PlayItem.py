@@ -88,7 +88,7 @@ class Song(PlayItem):
         self.trackInfo = trackInfo
         if trackInfo != None:
             self.duration = trackInfo['tracklength']
-        else
+        else:
             self.duration = 0
 
     ##
