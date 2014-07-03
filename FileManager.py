@@ -34,15 +34,17 @@ class LocalFileManager:
         self.basePath = basePath;
 
     def fileExists(self, song):
-        return os.path.isFile(getPath(song))
+        return os.path.isfile(self.getPath(song))
 
     def prepare(self, song):
-        pass
+        if isinstance(song, Song):
+		song.path = self.getPath(song)
 
     def getPath(self, song):
         paddedRelease= format (song.getReleaseID(), "07d")
         paddedTrack  = format (song.getTrackNumber(), "02d")
-        path = basePath + paddedRelease + "-" + paddedTrack + ".mp3"
+        path = self.basePath + paddedRelease + '/' + paddedRelease + "-" + paddedTrack + ".mp3"
+	print path
         return path
 ##
 # The FileManager class is responsible for actually getting playable files

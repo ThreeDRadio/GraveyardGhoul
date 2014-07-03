@@ -26,12 +26,13 @@
 #  Release under MIT Licence
 
    
-import glib, gobject
 import yaml
 import psycopg2
 import threading
+import gtk
 
-from FileManager import FileManager
+from FileManager import LocalFileManager
+from FileManager import ExternalFileManager
 
 from MusicLibrary import MusicLibrary
 from MessageLibrary import MessageLibrary
@@ -134,7 +135,7 @@ class Ghoul:
 
 print "Ghoul - The Three D Radio Graveyard Manager"
 print "Copyright 2014 Michael Marner <michael@20papercups.net>"
-gobject.threads_init()
+gtk.gdk.threads_init()
 
 ghoul = Ghoul()
 gui = GhoulUI.GhoulUI(ghoul)
