@@ -53,7 +53,7 @@ scheduler:
 file_manager:
     ##
     # How do we access files? Either external | intranet | local
-    mode: external
+    mode: local
 
     ##
     # The user ID and password to use when connecting to the intranet

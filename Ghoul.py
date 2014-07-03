@@ -59,10 +59,15 @@ class Ghoul:
                                      database = config['msg_database']['database'])
         
         
-        self.fm = FileManager(config['file_manager']['user_id'], 
-                         config['file_manager']['password'],
-                         config['file_manager']['httpUser'],
-                         config['file_manager']['httpPass'])
+        if config['file_manager']['mode'] == "external":
+            self.fm = ExternalFileManager(config['file_manager']['user_id'], 
+                             config['file_manager']['password'],
+                             config['file_manager']['httpUser'],
+                             config['file_manager']['httpPass'])
+
+        elif config['file_manager']['mode'] == 'local':
+            self.fm = LocalFileManager(config['file_manager']['music_base_path'])
+
 
         self.library = MusicLibrary(self.libraryDB)
         self.library.setAustralianNames(config['music']['aus_names'])

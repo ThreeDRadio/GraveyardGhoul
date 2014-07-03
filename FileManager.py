@@ -26,8 +26,24 @@
 
 import requests
 from PlayItem import Song
+import os.path
 
 
+class LocalFileManager:
+    def __init__(self, basePath):
+        self.basePath = basePath;
+
+    def fileExists(self, song):
+        return os.path.isFile(getPath(song))
+
+    def prepare(self, song):
+        pass
+
+    def getPath(self, song):
+        paddedRelease= format (song.getReleaseID(), "07d")
+        paddedTrack  = format (song.getTrackNumber(), "02d")
+        path = basePath + paddedRelease + "-" + paddedTrack + ".mp3"
+        return path
 ##
 # The FileManager class is responsible for actually getting playable files
 # from entries in the catalogue.
@@ -35,9 +51,8 @@ from PlayItem import Song
 # This particular class gets songs from Three D Radio's intranet, and should
 # only be used for testing.
 #
-class FileManager:
+class ExternalFileManager:
     def __init__(self, userID, passwordHash, httpUser, httpPass):
-        self.mode = "external"
         self.auth = (httpUser, httpPass)
         self.cookies = dict(threed_id=format(userID, "d"), threed_password=passwordHash)
 
