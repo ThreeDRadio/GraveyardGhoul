@@ -1,0 +1,82 @@
+#
+# Example config file for Ghoul.
+# 
+
+
+##
+# Database connection information for the music database
+music_database:
+    host: 
+    user: 
+    password: 
+    database: 
+
+##
+# Database connection information for the message database
+msg_database:
+    host: 
+    user: 
+    password: 
+    database: 
+
+##
+# Configuration relating to messages
+messages:
+    ##
+    # The categories to search for when choosing random stings
+    sting_categories:
+        - Sub_Message
+        - StationID-Local
+        - StationID-Australian
+        - StationID-International
+        - STING
+        - Sting
+
+##
+# Configuration for the scheduler
+scheduler:
+    ##
+    # Controls the number of songs that should be played before a message
+    consecutive_songs:
+        min: 3
+        max: 7
+    ##
+    # Play quotas the scheduler should meet, as fractions between 0 and 1
+    quotas:
+        demo: 0.1
+        local: 0.2
+        female: 0.25
+        aus: 0.4
+
+##
+# File Manager converts database entries to filesystem paths
+file_manager:
+    ##
+    # How do we access files? Either external | intranet | local
+    mode: local
+
+    ##
+    # The path to find the message files
+    message_base_path: /data/msg/
+
+    music_base_path: /data/mus/hi/
+
+
+##
+# Configuration of the music library
+music:
+    ##
+    # The maximum song length that we will play
+    max_song_length: 420
+
+    ##
+    # The valid country names to count as Australian
+    aus_names: 
+        - Australia
+        - australia
+        - C.P.A.
+        - cpa
+        - CPA
+        - Aus
+        - Aust
+        - Australian
