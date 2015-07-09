@@ -30,6 +30,7 @@ import yaml
 import psycopg2
 import threading
 import gtk
+import sys
 
 from FileManager import LocalFileManager
 from FileManager import ExternalFileManager
@@ -134,7 +135,7 @@ class Ghoul:
             l.itemQueued(item)
 
 print "Ghoul - The Three D Radio Graveyard Manager"
-print "Copyright 2014 Michael Marner <michael@20papercups.net>"
+print "Copyright 2015 Michael Marner <michael@20papercups.net>"
 gtk.gdk.threads_init()
 
 ghoul = Ghoul()
@@ -142,4 +143,9 @@ gui = GhoulUI.GhoulUI(ghoul)
 gui.main()
 
 print "GUI Loaded"
+
+if "--autoplay" in sys.argv:
+    print "Autoplay"
+    gui.onPlay(None)
+
 
