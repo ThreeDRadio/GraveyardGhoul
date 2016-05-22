@@ -55,11 +55,19 @@ class Ghoul:
                                      password = config['music_database']['password'],
                                      database = config['music_database']['database'])
         
-        self.messageDB = psycopg2.connect(host = config['msg_database']['host'],
+        try:
+            self.messageDB = psycopg2.connect(host = config['msg_database']['host'],
                                      user = config['msg_database']['user'],
                                      password = config['msg_database']['password'],
                                      database = config['msg_database']['database'])
         
+            self.messages = MessageLibrary(self.messageDB)
+            self.messages.setStingCategories(config['messages']['sting_categories'])
+            PlayItem.Message.basePath = config['file_manager']['message_base_path']
+        except TypeError:
+            pass
+        finally:
+            self.messages = None
         
         if config['file_manager']['mode'] == "external":
             self.fm = ExternalFileManager(config['file_manager']['user_id'], 
@@ -76,9 +84,6 @@ class Ghoul:
         self.library.setMaxSongLength(config['music']['max_song_length'])
         PlayItem.Song.ausNames = config['music']['aus_names']
         
-        self.messages = MessageLibrary(self.messageDB)
-        self.messages.setStingCategories(config['messages']['sting_categories'])
-        PlayItem.Message.basePath = config['file_manager']['message_base_path']
         
         self.playQueue = Queue(5)
        
