@@ -126,6 +126,11 @@ class Song(PlayItem):
         return self.cdInfo['id']
 
     ##
+    # Returns the release ID
+    def getReleaseName(self):
+        return self.cdInfo['title']
+
+    ##
     # Returns the track ID used by the database.
     def getTrackID(self):
         return self.trackInfo['trackid']
