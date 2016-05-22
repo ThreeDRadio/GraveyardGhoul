@@ -20,6 +20,13 @@ msg_database:
     database: 
 
 ##
+# Logging
+logger:
+    auth: 
+    baseURL:
+    showID:
+
+##
 # Configuration relating to messages
 messages:
     ##
