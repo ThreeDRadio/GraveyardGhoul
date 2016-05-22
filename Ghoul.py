@@ -37,6 +37,7 @@ from FileManager import ExternalFileManager
 
 from MusicLibrary import MusicLibrary
 from MessageLibrary import MessageLibrary
+from Logger import PlaylistLogger
 import Player
 import PlayItem
 
@@ -84,6 +85,7 @@ class Ghoul:
         self.library.setMaxSongLength(config['music']['max_song_length'])
         PlayItem.Song.ausNames = config['music']['aus_names']
         
+        self.logger = PlaylistLogger(config['logger']['auth'], config['logger']['baseURL'],config['logger']['showID'])
         
         self.playQueue = Queue(5)
        
@@ -114,6 +116,7 @@ class Ghoul:
             self.paused = False
             self.player.togglePause()
         else:
+            self.logger.startNewPlaylist()
             self.scheduler.start()
             self.playThread.start()
 
@@ -132,6 +135,8 @@ class Ghoul:
 
 
     def itemPlaying(self, item):
+        if isinstance(item, PlayItem.Song):
+            self.logger.submitSong(item)
         for l in self.listeners:
             l.itemPlaying(item)
 
