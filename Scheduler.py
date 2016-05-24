@@ -85,6 +85,25 @@ class Scheduler(threading.Thread):
         self.totalRequests = 0
 
     ##
+    # Get's the next song
+    #
+    def getNextSong(self):
+        if self.demoCount / float(self.playCount) < self.demoQuota:
+            nextItem = self.music.getRandomDemo()
+
+        elif self.localCount / float(self.playCount) < self.localQuota:
+            nextItem = self.music.getRandomLocal()
+
+        elif self.ausCount / float(self.playCount) < self.ausQuota:
+            nextItem = self.music.getRandomAustralian()
+
+        elif self.femaleCount / float(self.playCount) < self.femaleQuota:
+            nextItem = self.music.getRandomSong(True)
+
+        else:
+            nextItem = self.music.getRandomSong(False)
+
+    ##
     # Gets the next item that should be played.
     #
     # This method is a little bit clever, it randomly selects items to play
@@ -106,35 +125,9 @@ class Scheduler(threading.Thread):
                     if coin == 0:
                         nextItem = self.messages.getRandomSting()
                     else:
-                        if self.demoCount / float(self.playCount) < self.demoQuota:
-                            nextItem = self.music.getRandomDemo()
-
-                        elif self.localCount / float(self.playCount) < self.localQuota:
-                            nextItem = self.music.getRandomLocal()
-
-                        elif self.ausCount / float(self.playCount) < self.ausQuota:
-                            nextItem = self.music.getRandomAustralian()
-
-                        elif self.femaleCount / float(self.playCount) < self.femaleQuota:
-                            nextItem = self.music.getRandomSong(True)
-
-                        else:
-                            nextItem = self.music.getRandomSong(False)
+                        nextItem = self.getNextSong()
                 else:
-                    if self.demoCount / float(self.playCount) < self.demoQuota:
-                        nextItem = self.music.getRandomDemo()
-
-                    elif self.localCount / float(self.playCount) < self.localQuota:
-                        nextItem = self.music.getRandomLocal()
-
-                    elif self.ausCount / float(self.playCount) < self.ausQuota:
-                        nextItem = self.music.getRandomAustralian()
-
-                    elif self.femaleCount / float(self.playCount) < self.femaleQuota:
-                        nextItem = self.music.getRandomSong(True)
-
-                    else:
-                        nextItem = self.music.getRandomSong(False)
+                    nextItem = self.getNextSong()
 
             if isinstance(nextItem, Song):
                 self.totalRequests += 1
