@@ -29,7 +29,12 @@
 import yaml
 import psycopg2
 import threading
-import gtk
+
+try:
+    import gtk
+except:
+    from gi.repository import Gtk as gtk
+
 import sys
 
 from FileManager import LocalFileManager
@@ -43,12 +48,16 @@ import PlayItem
 
 import GhoulUI 
 from Scheduler import Scheduler
-from Queue import Queue
+
+try:
+    from Queue import Queue
+except:
+    from queue import Queue 
 
 
 class Ghoul:
     def __init__(self):
-        configStream = file('config.yaml', 'r')
+        configStream = open('config.yaml', 'r')
         config = yaml.load(configStream)
 
         self.libraryDB = psycopg2.connect(host = config['music_database']['host'],
@@ -144,18 +153,22 @@ class Ghoul:
         for l in self.listeners:
             l.itemQueued(item)
 
-print "Ghoul - The Three D Radio Graveyard Manager"
-print "Copyright 2015 Michael Marner <michael@20papercups.net>"
-gtk.gdk.threads_init()
+print("Ghoul - The Three D Radio Graveyard Manager")
+print("Copyright 2015 Michael Marner <michael@20papercups.net>")
+
+try:
+    gtk.gdk.threads_init()
+except:
+    pass
 
 ghoul = Ghoul()
 gui = GhoulUI.GhoulUI(ghoul)
 gui.main()
 
-print "GUI Loaded"
+print("GUI Loaded")
 
 if "--autoplay" in sys.argv:
-    print "Autoplay"
+    print("Autoplay")
     gui.onPlay(None)
 
 

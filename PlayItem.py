@@ -114,10 +114,10 @@ class Song(PlayItem):
     def getCSVLine(self):
         return '"' + self.getArtistName() + '",' + \
                '"' + self.getTrackTitle() + '",' + \
-               '"' + `self.isDemo()` + '",' + \
-               '"' + `self.isLocal()` + '",' + \
-               '"' + `self.isAustralian()` + '",' + \
-               '"' + `self.hasFemale()`  +'"'
+               '"' + str(self.isDemo()) + '",' + \
+               '"' + str(self.isLocal()) + '",' + \
+               '"' + str(self.isAustralian()) + '",' + \
+               '"' + str(self.hasFemale())  +'"'
 
 
     ##

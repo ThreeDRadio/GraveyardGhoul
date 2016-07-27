@@ -38,13 +38,13 @@ class LocalFileManager:
 
     def prepare(self, song):
         if isinstance(song, Song):
-		song.path = self.getPath(song)
+            song.path = self.getPath(song)
 
     def getPath(self, song):
         paddedRelease= format (song.getReleaseID(), "07d")
         paddedTrack  = format (song.getTrackNumber(), "02d")
         path = self.basePath + paddedRelease + '/' + paddedRelease + "-" + paddedTrack + ".mp3"
-	print path
+        print(path)
         return path
 ##
 # The FileManager class is responsible for actually getting playable files
@@ -82,8 +82,8 @@ class ExternalFileManager:
         if isinstance(song, Song):
             songURL = self.constructURL(song)
             r = requests.get(url=songURL, auth = self.auth, cookies = self.cookies)
-            f = open('/tmp/' + `song.getTrackID()` + '.mp3', 'w')
-            song.setLocalPath('/tmp/' + `song.getTrackID()` + '.mp3')
+            f = open('/tmp/' + str(song.getTrackID()) + '.mp3', 'wb')
+            song.setLocalPath('/tmp/' + str(song.getTrackID()) + '.mp3')
             f.write(r.content)
 
 
@@ -92,7 +92,7 @@ class ExternalFileManager:
     #
     # @param song The Song we need the path for
     def getPath(self, song):
-        return "/tmp/" + `song.getTrackID()` + ".mp3"
+        return "/tmp/" + song.getTrackID() + ".mp3"
 
     ##
     # Constructs a URL for obtaining a Song from Three D's intranet

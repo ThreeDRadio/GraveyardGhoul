@@ -47,11 +47,11 @@ class PlaylistLogger:
                 'host': 'Graveyard Ghoul'
         }
 
-        r = requests.post(self.baseURL + '/playlists/', headers=headers, data=data)
-        response = r.json()
-        
-        self.playlistID = response['id'];
-        return response['id'];
+        #r = requests.post(self.baseURL + '/playlists/', headers=headers, data=data)
+        #response = r.json()
+        #
+        #self.playlistID = response['id'];
+        #return response['id'];
 
 
     def submitSong(self, song):
@@ -71,5 +71,5 @@ class PlaylistLogger:
                 'female':  song.hasFemale(),
                 'newRelease': 'false' # we don't want Ghoul in Top 20+1
         }
-        r = requests.post(self.baseURL + '/playlistentries/', headers=headers, data=data)
+        #r = requests.post(self.baseURL + '/playlistentries/', headers=headers, data=data)
 

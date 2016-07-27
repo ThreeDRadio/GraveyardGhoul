@@ -26,9 +26,13 @@
 
 
 
-import pygst
-pygst.require("0.10")
-import gst
+try:
+    import pygst
+    pygst.require("0.10")
+    import gst
+except:
+    from gi.repository import Gst as gst
+
 import os
 import urllib
 import threading 
@@ -43,7 +47,11 @@ class Player:
     # Constructor, builds a gstreamer player ready to play music
     #
     def __init__(self):
-        self.player = gst.element_factory_make("playbin2", "player")
+        try:
+          self.player = gst.element_factory_make("playbin2", "player")
+        except:
+          self.player = gst.ElementFactory.make('playbin2', "player")
+
         #self.player.connect("about-to-finish", self.finished)
         self.bus = self.player.get_bus()
         self.bus.connect('message', self.onMessage)
@@ -128,7 +136,7 @@ class PlayThread(threading.Thread):
         self.condition.acquire()
         while self.keepGoing:
             item = self.queue.get()
-            print "Playing: " + item.getDetails()
+            print("Playing: " + item.getDetails())
             self.player.playContent(item.getLocalPath())
             self.nowPlaying = item
             for l in self.listeners:

@@ -66,7 +66,7 @@ class Scheduler(threading.Thread):
     def run(self):
         while True:
             item = self.getNextItem()
-            print "Loading: " + item.getDetails()
+            print("Loading: " + item.getDetails())
             self.fileManager.prepare(item)
             self.playQueue.put(item)
             for l in self.listeners:
@@ -143,12 +143,12 @@ class Scheduler(threading.Thread):
     ##
     # Prints some quota statistics
     def printStats(self):
-        print "Songs Played:    " + `self.playCount`
-        print "Songs Requested: " + `self.totalRequests`
-        print "Demos:           " + `self.demoCount`
-        print "Local:           " + `self.localCount`
-        print "Aus:             " + `self.ausCount`
-        print "Female:          " + `self.femaleCount`
+        print("Songs Played:    " + str(self.playCount))
+        print("Songs Requested: " + str(self.totalRequests))
+        print("Demos:           " + str(self.demoCount))
+        print("Local:           " + str(self.localCount))
+        print("Aus:             " + str(self.ausCount))
+        print("Female:          " + str(self.femaleCount))
 
     ##
     # Adds the song to the play count stats

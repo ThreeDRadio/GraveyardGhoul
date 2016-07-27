@@ -1,7 +1,13 @@
-import pygtk
-pygtk.require('2.0')
-import gtk
-import gtk.glade
+
+
+try:
+    import pygtk
+    pygtk.require('2.0')
+    import gtk
+    import gtk.glade
+except:
+    from gi.repository import Gtk as gtk
+
 import threading
 import PlayItem
 import time
