@@ -66,8 +66,6 @@ class Ghoul:
             self.messages.setStingCategories(config['messages']['sting_categories'])
             PlayItem.Message.basePath = config['file_manager']['message_base_path']
         except TypeError:
-            pass
-        finally:
             self.messages = None
         
         if config['file_manager']['mode'] == "external":
