@@ -89,19 +89,19 @@ class Scheduler(threading.Thread):
     #
     def getNextSong(self):
         if self.demoCount / float(self.playCount) < self.demoQuota:
-            return = self.music.getRandomDemo()
+            return self.music.getRandomDemo()
 
         elif self.localCount / float(self.playCount) < self.localQuota:
-            return = self.music.getRandomLocal()
+            return self.music.getRandomLocal()
 
         elif self.ausCount / float(self.playCount) < self.ausQuota:
-            return = self.music.getRandomAustralian()
+            return self.music.getRandomAustralian()
 
         elif self.femaleCount / float(self.playCount) < self.femaleQuota:
-            return = self.music.getRandomSong(True)
+            return self.music.getRandomSong(True)
 
         else:
-            return = self.music.getRandomSong(False)
+            return self.music.getRandomSong(False)
 
     ##
     # Gets the next item that should be played.
