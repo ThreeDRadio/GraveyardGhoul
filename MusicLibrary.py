@@ -65,7 +65,7 @@ class MusicLibrary:
     #
     def getRandomDemo(self):
         cur = self.db.cursor(cursor_factory=psycopg2.extras.DictCursor)
-        cur.execute("SELECT * FROM cd WHERE demo = '2' ORDER BY RANDOM() LIMIT 1")
+        cur.execute("SELECT * FROM cd WHERE demo = '2' AND ghoulApproved = true ORDER BY RANDOM() LIMIT 1")
         cd = cur.fetchone()
         cur.execute("SELECT * from cdtrack WHERE cdid = %s AND tracklength <= %s ORDER BY RANDOM() LIMIT 1;", (cd['id'], self.maxLength))
         track = cur.fetchone()
@@ -77,7 +77,7 @@ class MusicLibrary:
     #
     def getRandomLocal(self):
         cur = self.db.cursor(cursor_factory=psycopg2.extras.DictCursor)
-        cur.execute("SELECT * FROM cd WHERE local = '2' ORDER BY RANDOM() LIMIT 1")
+        cur.execute("SELECT * FROM cd WHERE local = '2' AND ghoulApproved = true ORDER BY RANDOM() LIMIT 1")
         cd = cur.fetchone()
         cur.execute("SELECT * from cdtrack WHERE cdid = %s AND tracklength <= %s ORDER BY RANDOM() LIMIT 1;", (cd['id'], self.maxLength))
         track = cur.fetchone()
@@ -88,7 +88,7 @@ class MusicLibrary:
     #
     def getRandomAustralian(self): 
         cur = self.db.cursor(cursor_factory=psycopg2.extras.DictCursor)
-        cur.execute("SELECT * FROM cd WHERE cpa = ANY(%s) ORDER BY RANDOM() LIMIT 1", (self.ausNames,))
+        cur.execute("SELECT * FROM cd WHERE cpa = ANY(%s) AND ghoulApproved = true ORDER BY RANDOM() LIMIT 1", (self.ausNames,))
         cd = cur.fetchone()
         cur.execute("SELECT * from cdtrack WHERE cdid = %s AND tracklength <= %s ORDER BY RANDOM() LIMIT 1;", (cd['id'], self.maxLength))
         track = cur.fetchone()
@@ -105,9 +105,9 @@ class MusicLibrary:
     def getRandomSong(self, female): 
         cur = self.db.cursor(cursor_factory=psycopg2.extras.DictCursor)
         if female == True:
-            cur.execute("SELECT * FROM cd WHERE female = '2' ORDER BY RANDOM() LIMIT 1")
+            cur.execute("SELECT * FROM cd WHERE female = '2' AND ghoulApproved = true ORDER BY RANDOM() LIMIT 1")
         else:
-            cur.execute("SELECT * FROM cd ORDER BY RANDOM() LIMIT 1")
+            cur.execute("SELECT * FROM cd WHERE ghoulApproved = true ORDER BY RANDOM() LIMIT 1")
 
         cd = cur.fetchone()
         cur.execute("SELECT * from cdtrack WHERE cdid = %s AND tracklength <= %s ORDER BY RANDOM() LIMIT 1;", (cd['id'], self.maxLength))
