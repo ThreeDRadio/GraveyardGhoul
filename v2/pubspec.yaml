@@ -31,11 +31,18 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  postgres: ^3.2.0
 
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
+  yaml: ^3.1.2
+  intl: ^0.19.0
+  dio: ^5.4.3+1
+  media_kit: ^1.1.10                             # Primary package.  
+  media_kit_libs_audio: ^1.0.4     
+  rxdart: ^0.27.7
 
 dev_dependencies:
   flutter_test:
