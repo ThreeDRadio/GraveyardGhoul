@@ -241,7 +241,6 @@ class _MainScreenState extends State<MainScreen> {
         print(err);
       }
     }
-    setState(() {});
   }
 
   /// Start's playback
@@ -265,6 +264,9 @@ class _MainScreenState extends State<MainScreen> {
     completed.add(item);
     upcoming.remove(item);
     await fillPlaylist();
+    setState(() {
+      playbackState = PlaybackState.playing;
+    });
   }
 
   /// Stop playback after the current song
