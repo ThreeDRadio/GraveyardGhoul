@@ -19,12 +19,12 @@ class PlaylistLogger {
 
   Future<String> startNewPlaylist() async {
     final headers = {
-      "Authorization": "Token " + auth,
+      "Authorization": "Token $auth",
     };
     final data = {
       'show': showId,
       'date': DateTime.now().toIso8601String(),
-      'notes': 'Ghoul started at ' + DateFormat.jm().format(DateTime.now()),
+      'notes': 'Ghoul started at ${DateFormat.jm().format(DateTime.now())}',
       'host': 'Graveyard Ghoul'
     };
 
@@ -42,7 +42,7 @@ class PlaylistLogger {
 
   Future<void> submitSong(Track song) async {
     final headers = {
-      "Authorization": "Token " + auth,
+      "Authorization": "Token $auth",
     };
 
     final data = {
@@ -59,7 +59,7 @@ class PlaylistLogger {
     };
 
     await http.post(
-      baseUrl + '/playlistentries/',
+      '$baseUrl/playlistentries/',
       data: data,
       options: Options(
         headers: headers,

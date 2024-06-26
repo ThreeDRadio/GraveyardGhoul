@@ -82,7 +82,7 @@ class PlayTable extends StatelessWidget {
                   ? null
                   : BoxDecoration(color: Colors.green.shade50);
               if (item is Track) {
-                Track t = item as Track;
+                Track t = item;
                 return MapEntry(
                     index,
                     TableRow(
@@ -133,15 +133,15 @@ class PlayTable extends StatelessWidget {
                       children: [
                         Padding(
                           padding: padding,
-                          child: Text('**MESSAGE**'),
+                          child: const Text('**MESSAGE**'),
                         ),
                         Padding(
                           padding: padding,
                           child: Text(m.title),
                         ),
-                        Text(''),
-                        Text(''),
-                        Text(''),
+                        const Text(''),
+                        const Text(''),
+                        const Text(''),
                       ],
                     ));
               }

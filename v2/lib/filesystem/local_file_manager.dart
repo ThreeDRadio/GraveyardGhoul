@@ -19,7 +19,7 @@ class LocalFileManager implements FileManager {
   Future<String> getPath(Track track) async {
     final paddedRelease = track.releaseId.toString().padLeft(7, '0');
     final paddedTrack = track.trackNumber.toString().padLeft(2, '0');
-    return '$basePath/$paddedRelease-${paddedTrack}.mp3';
+    return '$basePath/$paddedRelease-$paddedTrack.mp3';
   }
 
   @override

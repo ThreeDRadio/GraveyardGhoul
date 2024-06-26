@@ -37,7 +37,7 @@ void main() async {
       password: config['music_database']['password'],
       database: config['music_database']['database'],
     ),
-    settings: ConnectionSettings(
+    settings: const ConnectionSettings(
       sslMode: SslMode.disable,
     ),
   );
@@ -53,7 +53,7 @@ void main() async {
         password: config['msg_database']['password'],
         database: config['msg_database']['database'],
       ),
-      settings: ConnectionSettings(
+      settings: const ConnectionSettings(
         sslMode: SslMode.disable,
       ),
     );
@@ -209,7 +209,7 @@ class _MainScreenState extends State<MainScreen> {
       }
     });
     widget.player.stream.error.forEach((error) {
-      stderr.write('Could not play ${current?.getDetails()}. ${error}\n');
+      stderr.write('Could not play ${current?.getDetails()}. $error\n');
       if (playbackState == PlaybackState.playing) {
         next();
       } else {
@@ -372,8 +372,8 @@ class _MainScreenState extends State<MainScreen> {
                           onPressed: playbackState == PlaybackState.playing
                               ? next
                               : null,
-                          icon: Icon(Icons.skip_next)),
-                      IconButton(onPressed: stop, icon: Icon(Icons.stop)),
+                          icon: const Icon(Icons.skip_next)),
+                      IconButton(onPressed: stop, icon: const Icon(Icons.stop)),
                     ],
                   ),
                 ],

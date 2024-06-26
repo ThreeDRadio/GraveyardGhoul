@@ -26,7 +26,7 @@ class MusicLibrary {
     return Track.deserialise(
       cdInfo: cd,
       trackInfo: track,
-      australianNames: this.australianNames,
+      australianNames: australianNames,
     );
   }
 

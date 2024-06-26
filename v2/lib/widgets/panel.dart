@@ -11,7 +11,7 @@ class Panel extends StatelessWidget {
     return InputDecorator(
       decoration: InputDecoration(
         label: label,
-        enabledBorder: OutlineInputBorder(
+        enabledBorder: const OutlineInputBorder(
           borderSide: BorderSide(),
         ),
       ),

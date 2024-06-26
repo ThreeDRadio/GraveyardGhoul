@@ -15,7 +15,7 @@ class Message extends PlayItem {
   }) {
     final catPath =
         category.toLowerCase().substring(0, min(12, category.length));
-    super.localPath = '${basePath}${catPath}/${filename}';
+    super.localPath = '$basePath$catPath/$filename';
   }
 
   final String category;
