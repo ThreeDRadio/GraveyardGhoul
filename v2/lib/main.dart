@@ -14,6 +14,7 @@ import 'package:ghoul/model/track.dart' as song;
 import 'package:ghoul/pipes/format_duration.dart';
 import 'package:ghoul/scheduler.dart';
 import 'package:ghoul/widgets/panel.dart';
+import 'package:ghoul/widgets/play_table.dart';
 import 'package:ghoul/widgets/progress_bar.dart';
 import 'package:postgres/postgres.dart';
 import 'package:yaml/yaml.dart';
@@ -383,58 +384,8 @@ class _MainScreenState extends State<MainScreen> {
               child: Panel(
                 label: const Text('Up Next'),
                 child: SingleChildScrollView(
-                  child: DataTable(
-                    showCheckboxColumn: false,
-                    columnSpacing: 4,
-                    columns: const [
-                      DataColumn(label: Text('Artist')),
-                      DataColumn(label: Text('Title')),
-                      DataColumn(
-                          label: Text(
-                            '🏠',
-                            textAlign: TextAlign.center,
-                          ),
-                          tooltip: 'Local'),
-                      DataColumn(label: Text('🇦🇺'), tooltip: 'Australian'),
-                      DataColumn(label: Text('♀️'), tooltip: 'Female'),
-                    ],
-                    rows: upcoming.map<DataRow>((item) {
-                      if (item is song.Track) {
-                        song.Track t = item as song.Track;
-                        return DataRow(
-                          cells: [
-                            DataCell(Text(t.artist.toString())),
-                            DataCell(Text(t.title.toString())),
-                            DataCell(Checkbox(
-                              value: t.isLocal,
-                              onChanged: null,
-                              visualDensity: VisualDensity.compact,
-                            )),
-                            DataCell(Checkbox(
-                              value: t.isAustralian,
-                              onChanged: null,
-                              visualDensity: VisualDensity.compact,
-                            )),
-                            DataCell(Checkbox(
-                              value: t.hasFemale,
-                              onChanged: null,
-                              visualDensity: VisualDensity.compact,
-                            )),
-                          ],
-                        );
-                      } else {
-                        Message m = item as Message;
-                        return DataRow(
-                          cells: [
-                            DataCell(Text('**MESSAGE**')),
-                            DataCell(Text(m.title)),
-                            DataCell(Text('')),
-                            DataCell(Text('')),
-                            DataCell(Text('')),
-                          ],
-                        );
-                      }
-                    }).toList(),
+                  child: PlayTable(
+                    items: upcoming,
                   ),
                 ),
               ),
@@ -446,55 +397,7 @@ class _MainScreenState extends State<MainScreen> {
                   label: const Text('History'),
                   child: SizedBox.expand(
                     child: SingleChildScrollView(
-                      child: DataTable(
-                        columnSpacing: 0,
-                        columns: const [
-                          DataColumn(label: Text('Artist')),
-                          DataColumn(label: Text('Title')),
-                          DataColumn(label: Text('🏠'), tooltip: 'Local'),
-                          DataColumn(
-                              label: Text('🇦🇺'), tooltip: 'Australian'),
-                          DataColumn(label: Text('♀️'), tooltip: 'Female'),
-                        ],
-                        rows: completed.map<DataRow>((item) {
-                          if (item is song.Track) {
-                            song.Track t = item as song.Track;
-                            return DataRow(
-                              cells: [
-                                DataCell(Text(t.artist.toString())),
-                                DataCell(Text(t.title.toString())),
-                                DataCell(Checkbox(
-                                  value: t.isLocal,
-                                  onChanged: null,
-                                  visualDensity: VisualDensity.compact,
-                                )),
-                                DataCell(Checkbox(
-                                  value: t.isAustralian,
-                                  onChanged: null,
-                                  visualDensity: VisualDensity.compact,
-                                )),
-                                DataCell(Checkbox(
-                                  value: t.hasFemale,
-                                  onChanged: null,
-                                  visualDensity: VisualDensity.compact,
-                                )),
-                              ],
-                            );
-                          } else {
-                            Message m = item as Message;
-                            return DataRow(
-                              cells: [
-                                DataCell(Text('**MESSAGE**')),
-                                DataCell(Text(m.title)),
-                                DataCell(Text('')),
-                                DataCell(Text('')),
-                                DataCell(Text('')),
-                              ],
-                            );
-                          }
-                        }).toList(),
-                      ),
-                    ),
+                        child: PlayTable(items: completed)),
                   ),
                 ),
               ),
