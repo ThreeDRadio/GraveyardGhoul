@@ -52,17 +52,21 @@ void main() async {
         password: config['msg_database']['password'],
         database: config['msg_database']['database'],
       ),
+      settings: ConnectionSettings(
+        sslMode: SslMode.disable,
+      ),
     );
 
     messages = MessageLibrary(
       connection: messageDB,
-      stingCategories: config['messages']['sting_categories'],
+      stingCategories:
+          List<String>.from(config['messages']['sting_categories'] as YamlList),
     );
   } catch (err) {
     print('No message library configured');
   }
 
-//            PlayItem.Message.basePath = config['file_manager']['message_base_path']
+  Message.basePath = config['file_manager']['message_base_path'];
 
   late FileManager fm;
   switch (config['file_manager']['mode']) {

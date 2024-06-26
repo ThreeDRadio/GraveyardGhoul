@@ -12,7 +12,8 @@ class MessageLibrary {
 
   Future<Message> getRandomSting() async {
     final res = await connection.execute(
-        "SELECT * FROM messagelist WHERE type = ANY(@type) ORDER BY RANDOM() LIMIT 1",
+        Sql.named(
+            "SELECT * FROM messagelist WHERE type = ANY(@type) ORDER BY RANDOM() LIMIT 1"),
         parameters: {
           'type': stingCategories,
         });
@@ -21,7 +22,7 @@ class MessageLibrary {
     return Message(
         category: details['type'],
         code: details['code'],
-        duration: details['duration'],
+        duration: Duration(seconds: details['duration']),
         title: details['title'],
         filename: details['filename']);
   }
