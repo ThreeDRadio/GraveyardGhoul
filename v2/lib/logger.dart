@@ -15,7 +15,9 @@ class PlaylistLogger {
   final String auth;
   final Dio http;
 
-  late String currentPlaylistId;
+  final DateFormat dateFormat = DateFormat('yyyy-MM-dd');
+
+  String? currentPlaylistId;
 
   Future<String> startNewPlaylist() async {
     final headers = {
@@ -23,9 +25,10 @@ class PlaylistLogger {
     };
     final data = {
       'show': showId,
-      'date': DateTime.now().toIso8601String(),
-      'notes': 'Ghoul started at ${DateFormat.jm().format(DateTime.now())}',
-      'host': 'Graveyard Ghoul'
+      'date': dateFormat.format(DateTime.now()),
+      'notes':
+          'Ghoul Testing started at ${DateFormat.jm().format(DateTime.now())}',
+      'host': 'Graveyard Ghoul V2'
     };
 
     final response = await http.post(
@@ -36,8 +39,8 @@ class PlaylistLogger {
       ),
     );
 
-    currentPlaylistId = response.data['id'];
-    return currentPlaylistId;
+    currentPlaylistId = response.data['id'].toString();
+    return currentPlaylistId!;
   }
 
   Future<void> submitSong(Track song) async {
@@ -45,25 +48,34 @@ class PlaylistLogger {
       "Authorization": "Token $auth",
     };
 
-    final data = {
-      'playlist': currentPlaylistId,
-      'playlist_id': currentPlaylistId,
-      'artist': song.artist,
-      'title': song.title,
-      'album': song.releaseName,
-      'duration': song.duration,
-      'local': song.isLocal,
-      'australian': song.isAustralian,
-      'female': song.hasFemale,
-      'newRelease': 'false' // we don't want Ghoul in Top 20+1
-    };
+    try {
+      if (currentPlaylistId == null) {
+        await startNewPlaylist();
+      }
 
-    await http.post(
-      '$baseUrl/playlistentries/',
-      data: data,
-      options: Options(
-        headers: headers,
-      ),
-    );
+      final data = {
+        'playlist': currentPlaylistId,
+        'playlist_id': currentPlaylistId,
+        'artist': song.artist,
+        'title': song.title,
+        'album': song.releaseName,
+        'duration': song.duration.toString(),
+        'local': song.isLocal,
+        'australian': song.isAustralian,
+        'female': song.hasFemale,
+        'newRelease': 'false' // we don't want Ghoul in Top 20+1
+      };
+
+      await http.post(
+        '$baseUrl/playlistentries/',
+        data: data,
+        options: Options(
+          headers: headers,
+        ),
+      );
+    } catch (error) {
+      print('Could not log song');
+      print(error);
+    }
   }
 }

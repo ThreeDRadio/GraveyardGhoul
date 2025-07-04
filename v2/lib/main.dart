@@ -21,7 +21,7 @@ import 'package:yaml/yaml.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:rxdart/rxdart.dart';
 
-void main() async {
+void main(List<String> args) async {
   WidgetsFlutterBinding.ensureInitialized();
   MediaKit.ensureInitialized();
 
@@ -119,6 +119,7 @@ void main() async {
     player: player,
     scheduler: scheduler,
     manager: fm,
+    logger: logger,
   ));
 }
 
@@ -136,11 +137,13 @@ class Ghoul extends StatelessWidget {
     required this.scheduler,
     required this.player,
     required this.manager,
+    this.logger,
   });
 
   final Scheduler scheduler;
   final Player player;
   final FileManager manager;
+  final PlaylistLogger? logger;
 
   // This widget is Vjthe root of your application.
   @override
@@ -158,6 +161,7 @@ class Ghoul extends StatelessWidget {
         scheduler: scheduler,
         player: player,
         manager: manager,
+        logger: logger,
       ),
     );
   }
@@ -169,11 +173,13 @@ class MainScreen extends StatefulWidget {
     required this.scheduler,
     required this.player,
     required this.manager,
+    this.logger,
   });
 
   final Scheduler scheduler;
   final Player player;
   final FileManager manager;
+  final PlaylistLogger? logger;
 
   @override
   State<MainScreen> createState() => _MainScreenState();
@@ -248,6 +254,11 @@ class _MainScreenState extends State<MainScreen> {
   void start() async {
     final item = upcoming.first;
     completed.add(item);
+    if (item is song.Track) {
+      widget.logger?.submitSong(item);
+    } else {
+      print('Ignoring non-track');
+    }
     upcoming.remove(item);
     widget.player.open(Media(item.localPath!));
     await fillPlaylist();
@@ -264,6 +275,11 @@ class _MainScreenState extends State<MainScreen> {
     current = item;
     completed.add(item);
     upcoming.remove(item);
+    if (item is song.Track) {
+      widget.logger?.submitSong(item);
+    } else {
+      print('Ignoring non-track');
+    }
     await fillPlaylist();
     setState(() {
       playbackState = PlaybackState.playing;
@@ -367,13 +383,22 @@ class _MainScreenState extends State<MainScreen> {
                         icon: Icon(playbackState == PlaybackState.playing
                             ? Icons.pause
                             : Icons.play_arrow),
+                        tooltip: playbackState == PlaybackState.playing
+                            ? 'Pause'
+                            : 'Resume',
                       ),
                       IconButton(
-                          onPressed: playbackState == PlaybackState.playing
-                              ? next
-                              : null,
-                          icon: const Icon(Icons.skip_next)),
-                      IconButton(onPressed: stop, icon: const Icon(Icons.stop)),
+                        onPressed: playbackState == PlaybackState.playing
+                            ? next
+                            : null,
+                        icon: const Icon(Icons.skip_next),
+                        tooltip: 'Skip to next item',
+                      ),
+                      IconButton(
+                        onPressed: stop,
+                        icon: const Icon(Icons.stop),
+                        tooltip: 'Stop at end of this track',
+                      ),
                     ],
                   ),
                 ],
