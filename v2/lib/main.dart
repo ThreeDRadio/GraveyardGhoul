@@ -271,6 +271,7 @@ class _MainScreenState extends State<MainScreen> {
 
   /// Start's playback
   void start() async {
+    await widget.logger?.startNewPlaylist();
     final item = upcoming.first;
     completed.add(item);
     if (item is song.Track) {

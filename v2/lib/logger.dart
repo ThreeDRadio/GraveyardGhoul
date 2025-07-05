@@ -19,28 +19,32 @@ class PlaylistLogger {
 
   String? currentPlaylistId;
 
-  Future<String> startNewPlaylist() async {
-    final headers = {
-      "Authorization": "Token $auth",
-    };
-    final data = {
-      'show': showId,
-      'date': dateFormat.format(DateTime.now()),
-      'notes':
-          'Ghoul Testing started at ${DateFormat.jm().format(DateTime.now())}',
-      'host': 'Graveyard Ghoul V2'
-    };
+  Future<void> startNewPlaylist() async {
+    try {
+      final headers = {
+        "Authorization": "Token $auth",
+      };
+      final data = {
+        'show': showId,
+        'date': dateFormat.format(DateTime.now()),
+        'notes':
+            'Ghoul Testing started at ${DateFormat.jm().format(DateTime.now())}',
+        'host': 'Graveyard Ghoul V2'
+      };
 
-    final response = await http.post(
-      '$baseUrl/playlists/',
-      data: data,
-      options: Options(
-        headers: headers,
-      ),
-    );
+      final response = await http.post(
+        '$baseUrl/playlists/',
+        data: data,
+        options: Options(
+          headers: headers,
+        ),
+      );
 
-    currentPlaylistId = response.data['id'].toString();
-    return currentPlaylistId!;
+      currentPlaylistId = response.data['id'].toString();
+    } catch (error) {
+      print('Could not create playlist');
+      print(error);
+    }
   }
 
   Future<void> submitSong(Track song) async {
