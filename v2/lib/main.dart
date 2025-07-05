@@ -204,7 +204,9 @@ class _MainScreenState extends State<MainScreen> {
 
     initialPlaylistFill();
 
-    widget.player.stream.completed.forEach((complete) {
+    widget.player.stream.completed
+        .where((complete) => complete == true)
+        .forEach((complete) {
       if (complete && playbackState == PlaybackState.playing) {
         next();
       } else {
@@ -256,8 +258,6 @@ class _MainScreenState extends State<MainScreen> {
     completed.add(item);
     if (item is song.Track) {
       widget.logger?.submitSong(item);
-    } else {
-      print('Ignoring non-track');
     }
     upcoming.remove(item);
     widget.player.open(Media(item.localPath!));
@@ -277,8 +277,6 @@ class _MainScreenState extends State<MainScreen> {
     upcoming.remove(item);
     if (item is song.Track) {
       widget.logger?.submitSong(item);
-    } else {
-      print('Ignoring non-track');
     }
     await fillPlaylist();
     setState(() {
