@@ -30,6 +30,11 @@ void main(List<String> args) async {
           .readAsString();
   final config = loadYaml(configFile);
 
+  if (args.contains('--autoplay')) {
+    print('Autoplay');
+  }
+  final bool autoPlay = args.contains('--autoplay');
+
   final libraryDb = await Connection.open(
     Endpoint(
       host: config['music_database']['host'],
@@ -120,6 +125,7 @@ void main(List<String> args) async {
     scheduler: scheduler,
     manager: fm,
     logger: logger,
+    autoPlay: autoPlay,
   ));
 }
 
@@ -138,12 +144,14 @@ class Ghoul extends StatelessWidget {
     required this.player,
     required this.manager,
     this.logger,
+    this.autoPlay = false,
   });
 
   final Scheduler scheduler;
   final Player player;
   final FileManager manager;
   final PlaylistLogger? logger;
+  final bool autoPlay;
 
   // This widget is Vjthe root of your application.
   @override
@@ -162,6 +170,7 @@ class Ghoul extends StatelessWidget {
         player: player,
         manager: manager,
         logger: logger,
+        autoPlay: autoPlay,
       ),
     );
   }
@@ -174,12 +183,14 @@ class MainScreen extends StatefulWidget {
     required this.player,
     required this.manager,
     this.logger,
+    this.autoPlay = false,
   });
 
   final Scheduler scheduler;
   final Player player;
   final FileManager manager;
   final PlaylistLogger? logger;
+  final bool autoPlay;
 
   @override
   State<MainScreen> createState() => _MainScreenState();
@@ -201,8 +212,6 @@ class _MainScreenState extends State<MainScreen> {
   @override
   void initState() {
     super.initState();
-
-    initialPlaylistFill();
 
     widget.player.stream.completed
         .where((complete) => complete == true)
@@ -227,9 +236,17 @@ class _MainScreenState extends State<MainScreen> {
         });
       }
     });
+
+    initialPlaylistFill().then(
+      (value) {
+        if (widget.autoPlay) {
+          start();
+        }
+      },
+    );
   }
 
-  initialPlaylistFill() async {
+  Future<void> initialPlaylistFill() async {
     await fillPlaylist();
     setState(() {
       playbackState = PlaybackState.idle;
