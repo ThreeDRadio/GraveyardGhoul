@@ -6,7 +6,8 @@ class Track extends PlayItem {
     required this.releaseId,
     required this.trackNumber,
     required this.title,
-    required this.artist,
+    required this.trackArtist,
+    required this.albumArtist,
     required this.releaseName,
     required this.isLocal,
     required this.isAustralian,
@@ -26,7 +27,8 @@ class Track extends PlayItem {
       releaseId: cdInfo['id'],
       trackNumber: trackInfo['tracknum'],
       title: trackInfo['tracktitle'],
-      artist: trackInfo['trackartist'] ?? cdInfo['artist'],
+      trackArtist: trackInfo['trackartist'],
+      albumArtist: cdInfo['artist'],
       releaseName: cdInfo['title'],
       isLocal: cdInfo['local'] == 2,
       isDemo: cdInfo['demo'] == 2,
@@ -41,7 +43,8 @@ class Track extends PlayItem {
   final int releaseId;
   final int trackNumber;
   final String title;
-  final String artist;
+  final String? trackArtist;
+  final String albumArtist;
   final String releaseName;
   final bool isLocal;
   final bool isAustralian;
@@ -51,5 +54,13 @@ class Track extends PlayItem {
   @override
   String getDetails() {
     return '$artist - $title';
+  }
+
+  String get artist {
+    if (trackArtist != null && trackArtist!.isNotEmpty) {
+      return trackArtist!;
+    } else {
+      return albumArtist;
+    }
   }
 }
