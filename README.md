@@ -31,7 +31,7 @@ Station computers use OpenSuse. Most Flutter Linux guides assume a Debian style 
 You'll need to install the following packages
 
 ```bash
-zypper in git-core clang cmake ninja gtk3-devel libmpv2
+zypper in git-core clang cmake ninja gtk3-devel libmpv2 libcurl-devel java-21-openjdk-devel
 ```
 
 ## Install Flutter SDK
