@@ -2,6 +2,7 @@
 # Example config file for Ghoul.
 # 
 
+sentry_dsn: 
 
 ##
 # Database connection information for the music database

@@ -47,3 +47,5 @@ app.*.map.json
 msg
 config.yaml
 .vscode
+
+sentry.properties

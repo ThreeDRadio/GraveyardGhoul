@@ -20,14 +20,13 @@ import 'package:postgres/postgres.dart';
 import 'package:yaml/yaml.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 void main(List<String> args) async {
   WidgetsFlutterBinding.ensureInitialized();
   MediaKit.ensureInitialized();
 
-  final configFile =
-      await File('/Users/Michael/code/ThreeD/GraveyardGhoul/v2/config.yaml')
-          .readAsString();
+  final configFile = await File('./config.yaml').readAsString();
   final config = loadYaml(configFile);
 
   if (args.contains('--autoplay')) {
@@ -120,13 +119,22 @@ void main(List<String> args) async {
   scheduler.femaleQuota = (config['scheduler']['quotas']['female']);
 
   final Player player = Player();
-  runApp(Ghoul(
-    player: player,
-    scheduler: scheduler,
-    manager: fm,
-    logger: logger,
-    autoPlay: autoPlay,
-  ));
+  await SentryFlutter.init(
+    (options) {
+      options.dsn = config['sentry_dsn'];
+      // Adds request headers and IP for users, for more info visit:
+      // https://docs.sentry.io/platforms/dart/guides/flutter/data-management/data-collected/
+      options.sendDefaultPii = true;
+    },
+    appRunner: () => runApp(SentryWidget(
+        child: Ghoul(
+      player: player,
+      scheduler: scheduler,
+      manager: fm,
+      logger: logger,
+      autoPlay: autoPlay,
+    ))),
+  );
 }
 
 enum PlaybackState {
@@ -227,6 +235,10 @@ class _MainScreenState extends State<MainScreen> {
     });
     widget.player.stream.error.forEach((error) {
       stderr.write('Could not play ${current?.getDetails()}. $error\n');
+      Sentry.captureException(
+        error,
+        hint: Hint.withMap({'current': current?.getDetails()}),
+      );
       if (playbackState == PlaybackState.playing) {
         next();
       } else {
