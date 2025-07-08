@@ -276,6 +276,7 @@ class _MainScreenState extends State<MainScreen> {
           upcoming.add(item);
         }
       } catch (err) {
+        Sentry.captureException(err);
         print(err);
       }
     }

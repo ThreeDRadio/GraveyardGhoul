@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:ghoul/model/track.dart';
 import 'package:intl/intl.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 class PlaylistLogger {
   PlaylistLogger({
@@ -42,6 +43,7 @@ class PlaylistLogger {
 
       currentPlaylistId = response.data['id'].toString();
     } catch (error) {
+      Sentry.captureException(error);
       print('Could not create playlist');
       print(error);
     }
@@ -78,6 +80,7 @@ class PlaylistLogger {
         ),
       );
     } catch (error) {
+      Sentry.captureException(error);
       print('Could not log song');
       print(error);
     }
